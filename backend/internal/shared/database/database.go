@@ -9,7 +9,27 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
+	"github.com/google/uuid"
 )
+
+
+var pool *pgxpool.Pool
+
+
+
+type Generator struct {
+	ID		uuid.UUID
+	Name	string
+	Status  string
+	Model	string
+}
+
+var newGenerator Generator = Generator{
+	ID: 	uuid.New(),
+	Name: 	"高5",
+	Status: "店內",
+	Model:	"3600型",
+} 
 
 func init() {
 	err := godotenv.Load()
@@ -47,12 +67,17 @@ func Connect() {
 		fmt.Println("DATABASE_NAME environment variable is not set")
 	}
 	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", databaseUser, databasePassword, databaseUrl, databasePort, databaseName)
-	pool, err := pgxpool.New(context.Background(), connStr)
+	var err error
+	pool, err = pgxpool.New(context.Background(), connStr)
+
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
 		fmt.Println("Unable to connect to database:", err)
 	}
 	
-	defer pool.Close()
 
+}
+
+func Close(){
+	pool.Close()
 }
