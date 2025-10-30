@@ -74,3 +74,23 @@ func UserLoginCheck(email string, password string) (User, bool, error) {
 	).Scan(&user.Username, &user.Role, &user.Sales_site, &user.Phone_number, &user.Email, &user.Email_check, &user.Group)
 	return user, emailChecked, nil // Successful login
 }
+
+func UserRegister(newUser User, password string) error {
+	hashedPassword := fmt.Sprintf("%x", sha256.Sum256([]byte(password)))
+	_, err := pool.Exec(
+		context.Background(), addUserBySuperAdminSql,
+		newUser.Username,
+		hashedPassword,
+		newUser.Role,
+		newUser.Sales_site,
+		newUser.Phone_number,
+		newUser.Email,
+		false, // Email not verified
+		newUser.Group,
+	)
+
+	if err != nil {
+		return fmt.Errorf("register new user failed: %w", err)
+	}
+	return nil
+}

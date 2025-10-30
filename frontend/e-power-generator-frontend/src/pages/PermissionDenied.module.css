@@ -1,0 +1,90 @@
+/* src/pages/PermissionDenied/PermissionDenied.module.css */
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh; /* 讓它在頁面中垂直置中 */
+  background-color: #f8f9fa; /* 淺灰色背景 */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  padding: 2rem;
+}
+
+.card {
+  background: #ffffff;
+  padding: 2.5rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 550px;
+  width: 100%;
+  border: 1px solid #e9ecef;
+}
+
+.icon {
+  font-size: 5rem; /* 大圖示 */
+  color: #e74c3c; /* "危險" 的紅色 */
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 2rem; /* 28px */
+  font-weight: 700;
+  color: #212529;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.message {
+  font-size: 1.1rem; /* 16px */
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+}
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column-reverse; /* 在手機上，「主要」按鈕在上方 */
+  justify-content: center;
+  gap: 1rem; /* 按鈕間距 */
+}
+
+/* 桌面版的按鈕排列 */
+@media (min-width: 768px) {
+  .buttonGroup {
+    flex-direction: row;
+  }
+}
+
+.button {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+}
+
+.primaryButton {
+  background-color: #007bff; /* 主要藍色 */
+  color: white;
+}
+.primaryButton:hover {
+  background-color: #0069d9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+}
+
+.secondaryButton {
+  background-color: #f1f3f5;
+  color: #343a40;
+  border: 1px solid #ced4da;
+}
+.secondaryButton:hover {
+  background-color: #e9ecef;
+}

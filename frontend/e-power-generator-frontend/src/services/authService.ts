@@ -4,15 +4,20 @@ import type { AxiosResponse } from './apiClient';
 import axios from 'axios';
 
 
-// 登入表單的資料型別
 interface LoginCredentials {
   email: string;
   password: string;
 }
 
-// 登入成功後，後端回傳的資料型別 (假設)
+interface RegisterCredentials {
+    username: string;
+    email: string;
+    password: string;
+    password_confirma: string;
+    tel: string;
+}
+
 interface LoginResponse {
-//   token: string;
     user:          string;
     role:          string;
     group:         Array<string>;
@@ -20,6 +25,10 @@ interface LoginResponse {
     phone_number:  string;
     email:         string;
     email_checked: boolean;
+}
+
+interface RegisterResponse {
+    message: string;
 }
 
 
@@ -33,4 +42,19 @@ export const login = async (credentials: LoginCredentials): Promise<LoginRespons
         throw error;
     };
     
-};;
+};
+
+
+export const register = async (credentials: RegisterCredentials): Promise<RegisterResponse> => {
+    try {
+        const response: AxiosResponse<RegisterResponse> = await apiClient.post('/v1/auth/register', credentials);
+        return response.data;
+    } catch (error) {
+        console.error('註冊失敗:', error);
+        throw error;
+    };
+}
+
+export const IsLogin = ()=>{
+    return !(!localStorage.getItem('role') || localStorage.getItem('role') != 'admin');
+};

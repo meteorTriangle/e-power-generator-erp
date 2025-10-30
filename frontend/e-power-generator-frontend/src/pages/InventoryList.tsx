@@ -10,10 +10,10 @@ const { Title } = Typography;
 
 // 1. 讓 MOCK_GENERATORS 遵從 Generator 陣列型別
 const MOCK_GENERATORS: Generator[] = [
-  { id: 'G-001', model: 'CAT XQ1000', serialNumber: 'SN-12345', status: '可用', location: 'A 倉', powerKW: 800 },
-  { id: 'G-002', model: 'Cummins C500', serialNumber: 'SN-67890', status: '租賃中', location: '客戶工地 A', powerKW: 400 },
-  { id: 'G-003', model: 'Denyo DCA-150', serialNumber: 'SN-11223', status: '維修中', location: '維修區', powerKW: 125 },
-  { id: 'G-004', model: 'Airman SDG100', serialNumber: 'SN-44556', status: '可用', location: 'B 倉', powerKW: 80 },
+  { id: 'G-001', model: 'E-2450W', name: '高2', status: '可用', location: 'A 倉', powerKW: 2450 },
+  { id: 'G-002', model: 'E-2450W', name: '高5', status: '租賃中', location: '客戶工地 A', powerKW: 2450 },
+  { id: 'G-003', model: 'E-3600W', name: '高11', status: '維修中', location: '維修區', powerKW: 3600 },
+  { id: 'G-004', model: 'E-3600W', name: '高21', status: '可用', location: 'B 倉', powerKW: 3600 },
 ];
 
 // 2. 使用 React.FC (Functional Component)

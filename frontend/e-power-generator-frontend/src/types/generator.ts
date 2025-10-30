@@ -7,7 +7,7 @@ export type GeneratorStatus = '可用' | '租賃中' | '維修中' | 'default';
 export interface Generator {
   id: string;
   model: string;
-  serialNumber: string;
+  name: string;
   status: GeneratorStatus;
   location: string;
   powerKW: number;

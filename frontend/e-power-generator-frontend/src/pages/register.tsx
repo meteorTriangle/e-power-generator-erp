@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Typography, message } from 'antd';
-import { login } from '../services/authService'; // 匯入 service
+import { register } from '../services/authService'; // 匯入 service
 import type { AxiosError } from 'axios';
 import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
@@ -10,9 +10,12 @@ import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-de
 const { Title } = Typography;
 
 // 這是 antd Form 的 onFinish 函式會收到的型別
-interface LoginFormValues {
+interface RegisterFormValues {
+    username: string;
     email: string;
     password: string;
+    password_confirma: string;
+    tel: string;
 }
 
 const RegisterPage: React.FC = () => {
@@ -23,24 +26,16 @@ const RegisterPage: React.FC = () => {
      * 這裡就是「事件處理器」，不是 useEffect
      * 它會在使用者點擊 "登入" 按鈕且表單驗證通過後才被呼叫
      */
-    const handleLogin = async (values: LoginFormValues) => {
+    const handleRegister = async (values: RegisterFormValues) => {
         setLoading(true);
         try {
-            // 呼叫 API
-            // authService 內部會使用 apiClient
-            // apiClient 會請求 /api/v1/auth/login
-            // Proxy 會攔截此請求，並轉發到 http://localhost:8080/api/v1/auth/login
-            const response = await login(values);
+            const response = await register(values);
 
-            // 登入成功
-            //   localStorage.setItem('authToken', response.token); 
             message.success('登入成功！');
             navigate('/');
 
         } catch (err) {
-            // 登入失敗
             const error = err as AxiosError<{ message?: string }>;
-            // ... (錯誤處理)
             message.error(error.response?.data?.message || '登入失敗');
             setLoading(false);
         }
@@ -69,9 +64,9 @@ const RegisterPage: React.FC = () => {
 
                 {/* 3. 登入表單 */}
                 <Form
-                    name="login_form"
+                    name="register_form"
                     initialValues={{ remember: true }}
-                    onFinish={handleLogin} // 驗證成功後提交
+                    onFinish={handleRegister} // 驗證成功後提交
                     onFinishFailed={onFinishFailed} // 驗證失敗後
                     autoComplete="off"
                 >
@@ -132,7 +127,7 @@ const RegisterPage: React.FC = () => {
 
                     {/* 確認密碼欄位 */}
                     <Form.Item
-                        name="password_check"
+                        name="password_confirm"
                         rules={[
                             { required: true, message: '請再次輸入您的密碼!' },
                         ]}

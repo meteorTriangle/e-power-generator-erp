@@ -1,5 +1,6 @@
 // src/layout/CommonLayout.tsx
 
+
 import React, { Children, useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
@@ -9,14 +10,17 @@ import {
   SettingOutlined,
   UserOutlined,
   PoweroffOutlined,
+  LoginOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd'; // 匯入 MenuProps 型別
 import './CommonLayout.css'
+import { LoginButton } from '../components/loginButton';
 
 
 const { Header, Content } = Layout;
 
-const items: MenuProps['items'] = [
+var items: MenuProps['items'] = [
     {
         label: '首頁',
         key: 'home',
@@ -26,8 +30,9 @@ const items: MenuProps['items'] = [
         key: 'models',
         children: [
             {
-                type: 'group',
+                // type: '',
                 label: '發電機',
+                key: 'generators',
                 children: [
                     {
                         label: '柴油發電機',
@@ -40,18 +45,8 @@ const items: MenuProps['items'] = [
                 ],
             },
             {
-                type: 'group',
                 label: '水冷扇',
-                children: [
-                    {
-                        label: '雙北地區',
-                        key: 'taipei-fans',
-                    },
-                    {
-                        label: '高雄地區',
-                        key: 'kaohsiung-fans',
-                    },
-                ],
+                key: 'water-coolers',
             },
             {
                 label: '行動冷氣',
@@ -66,6 +61,54 @@ const items: MenuProps['items'] = [
     {
         label: '所有站點',
         key: 'sites',
+        children: [
+            {
+                label: '北部',
+                key: 'north-sites',
+                children: [
+                    {
+                        label: '新北新莊站',
+                        key: 'new-taipei',
+                    },
+                    {
+                        label: '桃園站',
+                        key: 'taoyuan',
+                    },
+                    {
+                        label: '新竹竹東站',
+                        key: 'hsinchu',
+                    },
+                ],
+            },
+            {
+                label: '中部',
+                key: 'middle-sites',
+                children: [
+                    {
+                        label: '台中北屯站',
+                        key: 'taichung',
+                    },
+                    {
+                        label: '雲林虎尾站',
+                        key: 'yunlin',
+                    },
+                ],
+            },
+            {
+                label: '南部',
+                key: 'south-sites',
+                children: [
+                    {
+                        label: '台南安南站',
+                        key: 'tainan',
+                    },
+                    {
+                        label: '高雄三民站',
+                        key: 'kaohsiung',
+                    },
+                ],
+            },
+        ],
     },
     {
         label: '我要詢價',
@@ -82,18 +125,30 @@ const items: MenuProps['items'] = [
     {
         label: '關於我們',
         key: 'about',
+        style: { marginRight: 'auto' },
     },
+]
+
+const items_user: MenuProps['items'] = [
     {
         label: '會員中心',
         key: 'member',
-        style: { marginLeft: 'auto' },
+        // style: { marginLeft: 'left' },
     },
-    {
-        label: <Link to="/login">登入</Link>,
-        key: '/login',
-        style: { marginLeft: 'left' },
-    }
+    LoginButton,
 ]
+
+const items_admin: MenuProps['items'] = [{
+    label: <Link to="/admin">管理系統</Link>,
+    key: 'admin',
+    // style: { marginLeft: 'auto' },
+},]
+
+
+if (localStorage.getItem('role') == 'admin') {
+    items = items.concat( items_admin );  
+} 
+items = items.concat(items_user);
 
 const CommonLayout = () => {
   const [current, setCurrent] = useState('home');
@@ -122,7 +177,7 @@ const CommonLayout = () => {
             style={{ flex: 1, minWidth: 0 }} // 讓菜單填滿剩餘空間
             />
         </Header>
-        <Content style={{ margin: '16px' }}>
+        <Content style={{}}>
             <Outlet />  
         </Content>
     </Layout>

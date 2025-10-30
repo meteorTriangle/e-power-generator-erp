@@ -1,4 +1,5 @@
 package auth
+
 import (
 	"encoding/json"
 	"net/http"
@@ -49,6 +50,36 @@ func loginApiHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func genToken(){
+func registerApiHandler(w http.ResponseWriter, r *http.Request) {
+	type RegisterRequest struct {
+		Username string `json:"username"`
+		Tel string `json:"tel"`
+		Email string `json:"email"`
+		Password string `json:"password"`
+		PasswordConfirm string `json:"password_confirm"`
+	}
+	var registerReq RegisterRequest
+	err := json.NewDecoder(r.Body).Decode(&registerReq)
+	if err != nil {
+		http.Error(w, "", http.StatusBadRequest)
+		return
+	}
+	if registerReq.Password != registerReq.PasswordConfirm {
+		http.Error(w, "Passwords do not match", http.StatusBadRequest)
+		return
+	}
+	newUser := database.User{
+		Username: registerReq.Username,
+		Role: "customer",
+		Sales_site: 1,
+		Phone_number: registerReq.Tel,
+		Email: registerReq.Email,
+		Group: []string{"customer"},
+	}
+	err = database.UserRegister(newUser, registerReq.Password)
+	if err != nil {
+		http.Error(w, "Registration failed", http.StatusInternalServerError)
+		return
+	}
 
 }

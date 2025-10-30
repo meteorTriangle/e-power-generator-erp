@@ -20,16 +20,16 @@ const getColumns = (
   onView: (record: Generator) => void
 ): TableProps<Generator>['columns'] => [
   {
+    title: '名稱 (Name)',
+    dataIndex: 'name',
+    key: 'name',
+    width: 150,
+  },
+  {
     title: '型號 (Model)',
     dataIndex: 'model',
     key: 'model',
     fixed: 'left',
-    width: 150,
-  },
-  {
-    title: '序號 (Serial No.)',
-    dataIndex: 'serialNumber',
-    key: 'serialNumber',
     width: 150,
   },
   {
