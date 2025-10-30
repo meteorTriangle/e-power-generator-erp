@@ -1,0 +1,25 @@
+/* src/layouts/CommonLayout.css */
+.logo {
+	float: left;
+	width: 31px;
+	margin: 16px 24px 16px 0;
+	background: rgba(255, 255, 255, 0.2);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+	border-radius: 4px;
+}
+
+/* AntD 的 Header 預設有一些 padding，如果不需要可以重設 */
+.ant-layout-header {
+  padding: 0 20px !important;
+  background-color: white;
+}
+
+header {
+	width: 100vw;
+	
+}
