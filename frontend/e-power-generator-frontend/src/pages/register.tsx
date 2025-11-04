@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Form, Input, Button, Typography, message } from 'antd';
-import { register } from '../services/authService'; // 匯入 service
+// import { register } from '../services/authService'; // 匯入 service
 import type { AxiosError } from 'axios';
 import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
@@ -26,20 +26,20 @@ const RegisterPage: React.FC = () => {
      * 這裡就是「事件處理器」，不是 useEffect
      * 它會在使用者點擊 "登入" 按鈕且表單驗證通過後才被呼叫
      */
-    const handleRegister = async (values: RegisterFormValues) => {
-        setLoading(true);
-        try {
-            const response = await register(values);
+    // const handleRegister = async (values: RegisterFormValues) => {
+    //     setLoading(true);
+    //     try {
+    //         const response = await register(values);
 
-            message.success('登入成功！');
-            navigate('/');
+    //         message.success('登入成功！');
+    //         navigate('/');
 
-        } catch (err) {
-            const error = err as AxiosError<{ message?: string }>;
-            message.error(error.response?.data?.message || '登入失敗');
-            setLoading(false);
-        }
-    };
+    //     } catch (err) {
+    //         const error = err as AxiosError<{ message?: string }>;
+    //         message.error(error.response?.data?.message || '登入失敗');
+    //         setLoading(false);
+    //     }
+    // };
     const onFinishFailed = (errorInfo: any) => {
         console.log('表單驗證失敗:', errorInfo);
     };
@@ -53,10 +53,11 @@ const RegisterPage: React.FC = () => {
             minHeight: '100vh', // 佔滿整個視窗高度
             minWidth: '100vw',
             background: '#f0f2f5', // 淺灰色背景
+            marginTop: '24px',
+            marginBottom: '24px',
         }}>
 
-            {/* 2. 登入卡片 */}
-            <Card style={{ width: 400, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+            <Card style={{ maxWidth: 400, minWidth: 360, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                 <div style={{ textAlign: 'center', marginBottom: '24px' }}>
                     <Title level={2}><img src="/src/assets/logo.png"></img></Title>
 
@@ -66,7 +67,7 @@ const RegisterPage: React.FC = () => {
                 <Form
                     name="register_form"
                     initialValues={{ remember: true }}
-                    onFinish={handleRegister} // 驗證成功後提交
+                    // onFinish={handleRegister} // 驗證成功後提交
                     onFinishFailed={onFinishFailed} // 驗證失敗後
                     autoComplete="off"
                 >
@@ -157,7 +158,7 @@ const RegisterPage: React.FC = () => {
                         <Button
                             style={{ marginRight: '8px' }}	
                             type="link"
-                            onClick={() => navigate('/forgot-password')}
+                            onClick={() => navigate('/forgotpassword')}
                         >
                             忘記密碼?
                         </Button>

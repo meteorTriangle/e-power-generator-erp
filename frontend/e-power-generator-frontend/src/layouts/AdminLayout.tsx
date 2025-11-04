@@ -4,11 +4,11 @@ import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import type { MenuProps } from 'antd'; // 匯入 MenuProps 型別
-import { DashboardOutlined, DatabaseOutlined } from '@ant-design/icons';
+import { DashboardOutlined, DatabaseOutlined, UserOutlined, OrderedListOutlined, FundOutlined } from '@ant-design/icons';
 import './AdminLayout.css'
-import { AiOutlineOrderedList } from "react-icons/ai";
+import {MdStore} from 'react-icons/md'
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 // 1. 為 menuItems 加上型別
 const menuItems: MenuProps['items'] = [
@@ -18,12 +18,47 @@ const menuItems: MenuProps['items'] = [
     label: <Link to="">儀表板</Link>, 
   },
   {
-    key: '/manager',
+    key: '/order-operation',
     icon: <DatabaseOutlined />,
-    label: <Link to="manager">庫存管理</Link>,
+    label: <Link to="order-operation">訂單操作</Link>,
   },
   {
-    label: <Link to='order'><AiOutlineOrderedList /> 訂單管理</Link>,
+    key: '/machine-manager',
+    icon: <DatabaseOutlined />,
+    label: <Link to="machine-manager">發電機管理</Link>,
+  },
+  {
+    key: '/site-manager',
+    icon: <MdStore />,
+    label: <Link to="site-manager">站點管理</Link>,
+  },
+  {
+    key: '/account',
+    icon: <UserOutlined />,
+    label: <Link to="account">帳號管理</Link>,
+    children: [
+      {
+        label: '客戶列表',
+        key: '/customer-list',
+      },
+      {
+        label: '管理員列表',
+        key: '/admin-list',
+      },
+    ],
+  },
+  {
+    key: '/maintance',
+    icon: <DatabaseOutlined />,
+    label: <Link to="maintance">機器養護</Link>,
+  },
+  {
+    key: '/business',
+    icon: <FundOutlined />,
+    label: <Link to="business">財務管理</Link>,
+  },
+  {
+    label: <Link to='order'><OrderedListOutlined /> 訂單管理</Link>,
     key: '/order-manager',
     children: [
       {

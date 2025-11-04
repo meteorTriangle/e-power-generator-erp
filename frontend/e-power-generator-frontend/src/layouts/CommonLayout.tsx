@@ -1,28 +1,89 @@
 // src/layout/CommonLayout.tsx
 
 
-import React, { Children, useState } from 'react';
-import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
+import React, { Children, useState, type FC } from 'react';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Layout, Menu, Spin } from 'antd';
 import {
-  HomeOutlined,
-  AppstoreOutlined,
-  SettingOutlined,
-  UserOutlined,
-  PoweroffOutlined,
-  LoginOutlined,
-  LogoutOutlined,
+    LoginOutlined,
+    LogoutOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd'; // 匯入 MenuProps 型別
 import './CommonLayout.css'
-import { LoginButton } from '../components/loginButton';
+import { useAuth } from '../context/authContext.tsx';
 
 
-const { Header, Content } = Layout;
+const { Header, Content,  } = Layout;
 
-var items: MenuProps['items'] = [
+
+const CommonLayout: FC = () => {
+    const [current, setCurrent] = useState('home');
+    const { logout, user, isLoading } = useAuth();
+    const navigate = useNavigate();
+
+
+    const authItem = () => {
+        if (isLoading) {
+            return ({
+                key: 'authLoadinga',
+                label: <Spin size="small" />, 
+                disabled: true,
+            })
+        }
+        if (user) {
+            return ({
+                key: 'logout',
+                icon: <LogoutOutlined />,
+                label: `登出`, // 顯示使用者名稱
+                onClick: () => {
+                    logout();
+                    navigate('/'); // 登出後導向到登入頁
+                },
+            })
+        } else {
+            return ({
+                key: 'login',
+                icon: <LoginOutlined />,
+                label: '登入',
+                onClick: () => navigate('/login'),
+            })  
+        }
+
+    };
+
+    // 2. 處理點擊事件，MenuProps['onClick'] 是 TS 類型
+    const onClick: MenuProps['onClick'] = (e) => {
+        console.log('click ', e);
+        setCurrent(e.key);
+    };
+    const items_admin = () => {
+        var returnValue = ({
+                    label: <Link to="/admin">管理系統</Link>,
+                    key: 'admin',
+                });
+        const { user, isLoading } = useAuth();
+        if (isLoading){
+            return {
+                key: 'authLoadingi',
+                label: <Spin size="small" />, 
+                disabled: true,
+            };
+        }
+        if (!user){
+            return null;
+        }
+        if(user.role != 'customer'){
+            return returnValue;
+        } else {
+            return null;
+        };
+    }
+
+    
+
+    var items: MenuProps['items'] = [
     {
-        label: '首頁',
+        label: <Link to="/">首頁</Link>,
         key: 'home',
     },
     {
@@ -30,7 +91,6 @@ var items: MenuProps['items'] = [
         key: 'models',
         children: [
             {
-                // type: '',
                 label: '發電機',
                 key: 'generators',
                 children: [
@@ -123,65 +183,44 @@ var items: MenuProps['items'] = [
         key: 'faq',
     },
     {
-        label: '關於我們',
+        label: <Link to="/about">關於我們</Link>,
         key: 'about',
         style: { marginRight: 'auto' },
     },
-]
-
-const items_user: MenuProps['items'] = [
+    items_admin(),
     {
         label: '會員中心',
         key: 'member',
-        // style: { marginLeft: 'left' },
     },
-    LoginButton,
+    authItem(),
+
 ]
 
-const items_admin: MenuProps['items'] = [{
-    label: <Link to="/admin">管理系統</Link>,
-    key: 'admin',
-    // style: { marginLeft: 'auto' },
-},]
 
 
-if (localStorage.getItem('role') == 'admin') {
-    items = items.concat( items_admin );  
-} 
-items = items.concat(items_user);
+    return (
+        <Layout>
+            <Header style={{ display: 'flex', alignItems: 'center' }}>
+                {/* Logo 或標題可以放在這裡 */}
+                <div className="logo">
+                    <img src='src/assets/logo.png' width={"40"}></img>
+                </div>
 
-const CommonLayout = () => {
-  const [current, setCurrent] = useState('home');
-
-  // 2. 處理點擊事件，MenuProps['onClick'] 是 TS 類型
-  const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
-    setCurrent(e.key);
-  };
-
-  return (
-    <Layout>
-        <Header style={{ display: 'flex', alignItems: 'center' }}>
-            {/* Logo 或標題可以放在這裡 */}
-            <div className="logo">
-            <img src='src/assets/logo.png' width={"40"}></img>
-            </div>
-
-            {/* 3. 核心：Menu 元件 */}
-            <Menu
-            theme="light" // 主題
-            mode="horizontal" // 設置為水平模式
-            onClick={onClick}
-            selectedKeys={[current]}
-            items={items}
-            style={{ flex: 1, minWidth: 0 }} // 讓菜單填滿剩餘空間
-            />
-        </Header>
-        <Content style={{}}>
-            <Outlet />  
-        </Content>
-    </Layout>
-  );
+                {/* 3. 核心：Menu 元件 */}
+                <Menu
+                    theme="light" // 主題
+                    mode="horizontal" // 設置為水平模式
+                    onClick={onClick}
+                    selectedKeys={[current]}
+                    items={items}
+                    style={{ flex: 1, minWidth: 0 }} // 讓菜單填滿剩餘空間
+                />
+            </Header>
+            <Content style={{}}>
+                <Outlet />
+            </Content>
+        </Layout>
+    );
 };
 
 export default CommonLayout;

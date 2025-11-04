@@ -7,11 +7,14 @@ import App from './App.tsx' // 確保副檔名正確
 
 import 'antd/dist/reset.css'; 
 import './index.css' 
+import { AuthProvider } from './context/authContext.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,
 )

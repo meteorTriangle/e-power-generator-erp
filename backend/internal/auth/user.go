@@ -1,85 +1,33 @@
+// internal/auth/user.go
 package auth
 
 import (
-	"encoding/json"
-	"net/http"
-	"new-e-power-generator-sys/inventory/internal/shared/database"
-
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
-
-type UserToken struct {
+type User struct {
+	ID           int       `json:"id"`
 	Username     string    `json:"username"`
 	Email        string    `json:"email"`
-	PasswordHash string    `json:"-"`
-	Role         string    `json:"role"`
+	PasswordHash string    `json:"-"` // 密碼雜湊不應被 JSON 序列化
+	Role         string    `json:"role"` // e.g., "admin", "sales", "customer"
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
 }
 
-
-func loginApiHandler(w http.ResponseWriter, r *http.Request) {
-	type LoginRequest struct {
-		Email string `json:"email"`
-		Password string `json:"password"`
-	}
-	var loginReq LoginRequest
-	err := json.NewDecoder(r.Body).Decode(&loginReq)
+// HashPassword 雜湊明文密碼
+func (u *User) HashPassword(password string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
-		return
+		return err
 	}
-	user, emailChecked, err := database.UserLoginCheck(loginReq.Email, loginReq.Password)
-	if err != nil {
-		http.Error(w, "Login failed", http.StatusUnauthorized)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json")
-	response := map[string]interface{}{
-		"user": user.Username,
-		"role": user.Role,
-		"group": user.Group,
-		"sales_site": user.Sales_site,
-		"phone_number": user.Phone_number,
-		"email": user.Email,
-		"email_checked": emailChecked,
-	}
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		http.Error(w, "Failed to Encode JSON", http.StatusInternalServerError)
-	}
+	u.PasswordHash = string(hash)
+	return nil
 }
 
-func registerApiHandler(w http.ResponseWriter, r *http.Request) {
-	type RegisterRequest struct {
-		Username string `json:"username"`
-		Tel string `json:"tel"`
-		Email string `json:"email"`
-		Password string `json:"password"`
-		PasswordConfirm string `json:"password_confirm"`
-	}
-	var registerReq RegisterRequest
-	err := json.NewDecoder(r.Body).Decode(&registerReq)
-	if err != nil {
-		http.Error(w, "", http.StatusBadRequest)
-		return
-	}
-	if registerReq.Password != registerReq.PasswordConfirm {
-		http.Error(w, "Passwords do not match", http.StatusBadRequest)
-		return
-	}
-	newUser := database.User{
-		Username: registerReq.Username,
-		Role: "customer",
-		Sales_site: 1,
-		Phone_number: registerReq.Tel,
-		Email: registerReq.Email,
-		Group: []string{"customer"},
-	}
-	err = database.UserRegister(newUser, registerReq.Password)
-	if err != nil {
-		http.Error(w, "Registration failed", http.StatusInternalServerError)
-		return
-	}
-
+// CheckPassword 驗證密碼是否正確
+func (u *User) CheckPassword(password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+	return err == nil
 }

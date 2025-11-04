@@ -8,7 +8,7 @@ import type { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
 
 // 正確的設定 (讓請求發向您前端伺服器的相對路徑)
 // 這樣 Vite/CRA 的 Proxy 才能攔截到它
-const API_BASE_URL = '/api'; 
+const API_BASE_URL = '/api/v1'; 
 // ----------------------------------------------------
 
 
