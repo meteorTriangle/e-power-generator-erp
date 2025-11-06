@@ -21,7 +21,7 @@ const InventoryList: React.FC = () => {
   // 3. 為 useState 加上泛型
   const [generators, setGenerators] = useState<Generator[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, _] = useState<string | null>(null); // state 可以是 string 或 null
+  const [error, ] = useState<string | null>(null); // state 可以是 string 或 null
 
   // 模擬資料獲取
   useEffect(() => {

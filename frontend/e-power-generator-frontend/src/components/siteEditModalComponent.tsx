@@ -26,6 +26,7 @@ const EditSiteModal: React.FC<editSiteModalProps> = ({ onRefresh, record, edit, 
     const [loading, setLoading] = useState(false);
     const [delLoading, setDelLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [comfirm, setComfirm] = useState(false);
 
     const handleSite = async (values: Site) => {
         try {
@@ -35,7 +36,7 @@ const EditSiteModal: React.FC<editSiteModalProps> = ({ onRefresh, record, edit, 
             setError(null);
             handleCancel();
             setIsSucModalVisible(true);
-        } catch (err: any) {
+        } catch (err: unknown) {
             setError(typeName + "站點失敗：" + (err.message || '未知錯誤'));
         } finally {
             setLoading(false);
@@ -73,7 +74,7 @@ const EditSiteModal: React.FC<editSiteModalProps> = ({ onRefresh, record, edit, 
             handleCancel();
             // setIsDelModalVisible(true);
             setComfirm(true);
-        } catch (err: any) {
+        } catch (err: unknown) {
             setError("刪除站點失敗：" + (err.message || '未知錯誤'));
         } finally {
             setDelLoading(false);
@@ -108,7 +109,6 @@ const EditSiteModal: React.FC<editSiteModalProps> = ({ onRefresh, record, edit, 
     };
 
     const comfirmDeleteModal = () => {
-        const [comfirm, setComfirm] = useState(false);
         if (comfirm) {
             return delSucModal();
         }

@@ -3,6 +3,7 @@ import { Modal, Button, Card, Form, Input, Typography, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { Site } from '../types/site';
 import apiClient from '../services/apiClient';
+// import type { AxiosError } from 'axios';
 
 interface AddSiteModalProps {
     onRefresh: () => void; // 新增一個 onRefresh prop
@@ -21,7 +22,7 @@ const AddSiteModal: React.FC<AddSiteModalProps> = ({ onRefresh }) => {
             setError(null);
             handleCancel();
             setIsSucModalVisible(true);
-        } catch (err: any) {
+        } catch (err: unknown) {
             setError("新增站點失敗：" + (err.message || '未知錯誤'));
         } finally {
             setLoading(false);
