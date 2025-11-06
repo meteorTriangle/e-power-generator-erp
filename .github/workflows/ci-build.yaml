@@ -1,0 +1,86 @@
+name: Build Frontend and Backend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'frontend/e-power-generator-frontend/**'
+      - 'backend/**'
+
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    # 僅在 'frontend/' 資料夾有變動時執行此工作
+    if: |
+      github.event_name == 'push' || 
+      (github.event_name == 'pull_request' && 
+      (contains(github.event.pull_request.labels.*.name, 'force-build-frontend') || 
+      (github.base_ref != 'main' && contains(github.event.pull_request.head.ref, 'frontend/')))) # 這是簡化的路徑判斷邏輯，更精確的判斷需要額外的 action
+
+    defaults:
+      default-directory: ./frontend/e-power-generator-frontend/ # 設定此工作的預設目錄
+
+    steps:
+      - name: 檢查程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 安裝依賴 (Frontend)
+        run: npm install
+
+      - name: 執行 lint 和 test (Frontend)
+        run: |
+          npm run lint
+          npm run test
+      
+      - name: 建置 (Frontend)
+        run: npm run build
+
+      - name: 上傳建置產物
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: ./frontend/e-power-generator-frontend/build
+
+  build-backend:
+    runs-on: ubuntu-latest
+    # 僅在 'backend/' 資料夾有變動時執行此工作
+    if: |
+      github.event_name == 'push' || 
+      (github.event_name == 'pull_request' && 
+      (contains(github.event.pull_request.labels.*.name, 'force-build-backend') || 
+      (github.base_ref != 'main' && contains(github.event.pull_request.head.ref, 'backend/')))) # 簡化的路徑判斷
+
+    defaults:
+      working-directory: ./backend # 設定此工作的預設目錄
+
+    steps:
+      - name: 檢查程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.21
+
+      - name: 執行 lint 和 test (Backend)
+        run: |
+          go vet ./...
+          go test ./...
+      
+      - name: 建置 (Backend)
+        run: go build -v ./cmd/server -o ./server .
+
+      - name: 上傳建置產物
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-binary
+          path: ./backend/server
