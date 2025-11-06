@@ -76,7 +76,7 @@ jobs:
           go test ./...
       
       - name: 建置 (Backend)
-        run: go build -v ./cmd/server -o ./server .
+        run: go build -v ./backend/cmd/server -o ./server .
 
       - name: 上傳建置產物
         uses: actions/upload-artifact@v4
