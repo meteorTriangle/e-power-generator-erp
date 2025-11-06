@@ -10,7 +10,7 @@ export default defineConfig({
   // ----------------------------------------------------
   server: {
     // (可選) 設定您希望 Vite 運行的 port
-    // port: 5173, 
+    port: 5173, 
     allowedHosts: true,
     host: "0.0.0.0",
     // (可選) 啟動時自動在瀏覽器中開啟

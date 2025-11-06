@@ -23,7 +23,7 @@ const AddSiteModal: React.FC<AddSiteModalProps> = ({ onRefresh }) => {
             handleCancel();
             setIsSucModalVisible(true);
         } catch (err: unknown) {
-            setError("新增站點失敗：" + (err.message || '未知錯誤'));
+            setError("新增站點失敗：" + (err || '未知錯誤'));
         } finally {
             setLoading(false);
         }

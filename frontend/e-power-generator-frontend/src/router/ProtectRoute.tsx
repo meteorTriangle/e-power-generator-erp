@@ -1,7 +1,7 @@
 import React from 'react';
 import PermissionDenied from '../pages/PermissionDenied'
 import { Outlet } from 'react-router-dom';
-import { useAuth } from '../context/authContext.tsx';
+import { useAuth } from '../hooks/useAuth';
 
 
 

@@ -1,8 +1,8 @@
 import { 
-    createContext, useContext
+    useContext
  } from 'react';
 // (修改) 從 AuthContext 檔案中匯入 Context 和型別
-import { AuthContextType } from '../context/AuthContext'; 
+import { AuthContext } from '../context/authContext.ts'; 
 
 /**
  * useAuth Hook
@@ -10,8 +10,6 @@ import { AuthContextType } from '../context/AuthContext';
  * @returns {AuthContextType}
  * @throws {Error} 如果在 AuthProvider 之外使用
  */
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

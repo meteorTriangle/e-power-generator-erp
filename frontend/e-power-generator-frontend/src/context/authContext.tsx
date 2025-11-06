@@ -7,6 +7,7 @@ import type {
   FC,
 } from 'react';
 import apiClient from '../services/apiClient';
+import { AuthContext } from './authContext';
 
 // --- 1. 定義型別 (Types) ---
 
@@ -37,6 +38,8 @@ interface RefreshApiResponse {
 
 // --- 2. 建立 Context ---
 // (修改) 我們需要 'export' Context，這樣 useAuth Hook 才能在另一個檔案中讀取它
+
+
 
 // --- 3. 建立 Provider (提供者) ---
 

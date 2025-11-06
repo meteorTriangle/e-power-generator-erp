@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd'; // 匯入 MenuProps 型別
 import './CommonLayout.css'
-import { useAuth } from '../context/authContext.tsx';
+import { useAuth } from '../hooks/useAuth.ts';
 
 
 const { Header, Content,  } = Layout;

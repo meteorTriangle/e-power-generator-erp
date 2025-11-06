@@ -34,7 +34,7 @@ const SiteList: React.FC = () => {
       setSites(response.data);
       setError(null);
     } catch (err: unknown) {
-      setError("讀取資料失敗：" + (err.message || '未知錯誤'));
+      setError("讀取資料失敗：" + (err || '未知錯誤'));
     } finally {
       setLoading(false);
     }

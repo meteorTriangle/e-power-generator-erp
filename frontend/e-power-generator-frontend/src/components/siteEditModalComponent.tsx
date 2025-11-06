@@ -37,7 +37,7 @@ const EditSiteModal: React.FC<editSiteModalProps> = ({ onRefresh, record, edit, 
             handleCancel();
             setIsSucModalVisible(true);
         } catch (err: unknown) {
-            setError(typeName + "站點失敗：" + (err.message || '未知錯誤'));
+            setError(typeName + "站點失敗：" + (err || '未知錯誤'));
         } finally {
             setLoading(false);
         }
@@ -75,7 +75,7 @@ const EditSiteModal: React.FC<editSiteModalProps> = ({ onRefresh, record, edit, 
             // setIsDelModalVisible(true);
             setComfirm(true);
         } catch (err: unknown) {
-            setError("刪除站點失敗：" + (err.message || '未知錯誤'));
+            setError("刪除站點失敗：" + (err || '未知錯誤'));
         } finally {
             setDelLoading(false);
         }

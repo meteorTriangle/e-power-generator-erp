@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, Form, Input, Button, Typography } from 'antd';
 import { isAxiosError } from 'axios';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useAuth } from '../context/authContext';
+import { useAuth } from '../hooks/useAuth';
 import apiClient from '../services/apiClient';
 import styles from './Login.module.css';
 
