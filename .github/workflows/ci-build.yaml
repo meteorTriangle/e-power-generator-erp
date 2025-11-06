@@ -25,23 +25,29 @@ jobs:
 
     steps:
       - name: 檢查程式碼
-        uses: actions/checkout@v4
+        uses: cd ./frontend/e-power-generator-frontend/ && actions/checkout@v4
 
       - name: 設定 Node.js
-        uses: actions/setup-node@v4
+        uses: cd ./frontend/e-power-generator-frontend/ && actions/setup-node@v4
         with:
           node-version: 18
 
       - name: 安裝依賴 (Frontend)
-        run: npm install
+        run: |
+          cd ./frontend/e-power-generator-frontend/
+          npm install
+          
 
       - name: 執行 lint 和 test (Frontend)
         run: |
+          cd ./frontend/e-power-generator-frontend/
           npm run lint
           npm run test
       
       - name: 建置 (Frontend)
-        run: npm run build
+        run: |
+          cd ./frontend/e-power-generator-frontend/
+          npm run build
 
       - name: 上傳建置產物
         uses: actions/upload-artifact@v4
@@ -59,8 +65,8 @@ jobs:
       (github.base_ref != 'main' && contains(github.event.pull_request.head.ref, 'backend/'))))
 
     # defaults:
-      # working-directory: ./backend # 設定此工作的預設目錄
-
+    #   working-directory: ./backend
+      
     steps:
       - name: 檢查程式碼
         uses: actions/checkout@v4
@@ -68,16 +74,19 @@ jobs:
       - name: 設定 Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.21
+          go-version: 1.25
 
       - name: 執行 lint 和 test (Backend)
         run: |
+          cd ./backend/
           go vet ./...
           go test ./...
       
       - name: 建置 (Backend)
-        run: go build -v ./backend/cmd/server -o ./server .
-
+        run: |
+          cd ./backend
+          go build -v ./cmd/server
+        
       - name: 上傳建置產物
         uses: actions/upload-artifact@v4
         with:
