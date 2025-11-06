@@ -3,12 +3,15 @@ name: Create Release for Pi Deployment
 on:
   push:
     tags:
-      - 'v*.*.*' # 僅在推送 'v' 開頭的標籤時觸發 (例如 v1.0.1)
+      - 'v*.*.*' # 僅在推送 'v' 開頭的標籤時觸發
 
 jobs:
-  # === 工作 1: 建置前端 (使用您現有的邏輯) ===
+  # === 工作 1: 建置前端 ===
   build-frontend:
     runs-on: ubuntu-latest
+    
+    # (修正) 移除了 'if:' 條件，推送標籤時總是執行
+
     steps:
       - name: 檢查程式碼
         uses: actions/checkout@v4
@@ -24,20 +27,27 @@ jobs:
           npm install
           
       - name: 建置 (Frontend)
-        # (註) 在 Release 時，您可以選擇性跳過 lint/test 以加快速度
         run: |
           cd ./frontend/e-power-generator-frontend/
           npm run build
-
+      
+      - name: (除錯步驟) 顯示建置產物
+        run: |
+          echo "顯示 ./frontend/e-power-generator-frontend/build 的內容："
+          ls -lR ./frontend/e-power-generator-frontend/build
+          
       - name: 上傳建置產物
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: ./frontend/e-power-generator-frontend/build # 確保此路徑正確
+          path: ./frontend/e-power-generator-frontend/build # 確保此路徑與上方 'ls' 顯示的一致
 
-  # === 工作 2: 建置後端 (修改為跨平台編譯) ===
+  # === 工作 2: 建置後端 (修正為跨平台編譯) ===
   build-backend:
     runs-on: ubuntu-latest
+    
+    # (修正) 移除了 'if:' 條件
+
     steps:
       - name: 檢查程式碼
         uses: actions/checkout@v4
@@ -45,16 +55,16 @@ jobs:
       - name: 設定 Go
         uses: actions/setup-go@v5
         with:
-          go-version: 1.25 # 使用您指定的版本
+          go-version: 1.20 # 您指定的版本
 
-      - name: (修改) 跨平台編譯 for Raspberry Pi (ARM64)
+      - name: (修正) 跨平台編譯 for Raspberry Pi (ARM64)
         env:
           GOOS: linux
-          GOARCH: arm64 # 假設您的 Pi 是 64-bit (Pi 3B+, 4, 5)
+          GOARCH: arm64 # 假設 Pi 是 64-bit
+          CGO_ENABLED: 0
         run: |
           cd ./backend
-          # (修改) CGO_ENABLED=0 是跨平台編譯的好習慣
-          CGO_ENABLED=0 go build -v -o ./server-arm64 ./cmd/server
+          go build -v -o ./server-arm64 ./cmd/server
         
       - name: 上傳建置產物
         uses: actions/upload-artifact@v4
@@ -77,22 +87,21 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: ./dist/static # 下載到 dist/static/ (Go 程式的靜態目錄)
+          path: ./dist/static # 下載到 Go 程式準備提供的 'static' 資料夾
 
       - name: 下載後端產物
         uses: actions/download-artifact@v4
         with:
           name: backend-binary
-          path: ./dist # 下載到 dist/
+          path: ./dist # 下載到 'dist' 根目錄
 
       - name: 準備打包
         run: |
           mv ./dist/server-arm64 ./dist/server
-          echo "準備打包以下檔案："
+          echo "打包檔案結構："
           ls -lR ./dist
 
-      - name: 建立 .tar.gz 壓縮檔
-        # 這個壓縮檔會包含 'server' 執行檔 和 'static' 資料夾
+      - name: Gzip 壓縮 .tar 檔 (改為 .tar.gz)
         run: |
           cd ./dist
           tar -czf ../release-arm64.tar.gz server static
@@ -104,4 +113,4 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Release ${{ env.RELEASE_TAG }}
           files: |
-            ./release-arm64.tar.gz
+            ./release-arm64.tar.gz # 上傳 .tar.gz 檔案
