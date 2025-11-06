@@ -21,8 +21,8 @@ jobs:
       (contains(github.event.pull_request.labels.*.name, 'force-build-frontend') || 
       (github.base_ref != 'main' && contains(github.event.pull_request.head.ref, 'frontend/')))) # 這是簡化的路徑判斷邏輯，更精確的判斷需要額外的 action
 
-    defaults:
-      working-directory: ./frontend/e-power-generator-frontend/ # 設定此工作的預設目錄
+    # defaults:
+      # working-directory: ./frontend/e-power-generator-frontend/ # 設定此工作的預設目錄
 
     steps:
       - name: 檢查程式碼
@@ -59,8 +59,8 @@ jobs:
       (contains(github.event.pull_request.labels.*.name, 'force-build-backend') || 
       (github.base_ref != 'main' && contains(github.event.pull_request.head.ref, 'backend/')))) # 簡化的路徑判斷
 
-    defaults:
-      working-directory: ./backend # 設定此工作的預設目錄
+    # defaults:
+      # working-directory: ./backend # 設定此工作的預設目錄
 
     steps:
       - name: 檢查程式碼
