@@ -205,6 +205,9 @@ const CommonLayout: FC = () => {
                 <div className="logo">
                     <Image 
                         src={logo}
+                        alt="Logo"
+                        preview={false}
+                        
                         width={"40"}
                     ></Image>
                 </div>

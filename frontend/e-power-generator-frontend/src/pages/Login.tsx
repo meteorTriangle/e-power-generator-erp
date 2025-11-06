@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Card, Form, Input, Button, Typography } from 'antd';
+import { Card, Form, Input, Button, Typography, Image } from 'antd';
 import { isAxiosError } from 'axios';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAuth } from '../hooks/useAuth';
 import apiClient from '../services/apiClient';
 import styles from './Login.module.css';
+import logo from '../assets/logo.png';
 
 
 
@@ -27,10 +28,10 @@ const LoginPage: React.FC = () => {
 
 	//UI status
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null); 
+	const [error, setError] = useState<string | null>(null);
 
 	// routes and authentication
-	const { login } = useAuth(); 
+	const { login } = useAuth();
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -93,7 +94,12 @@ const LoginPage: React.FC = () => {
 			{/* 2. 登入卡片 */}
 			<Card style={{ maxWidth: 400, minWidth: 360, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
 				<div style={{ textAlign: 'center', marginBottom: '24px' }}>
-					<Title level={2}><img src="/src/assets/logo.png"></img></Title>
+					<Title level={2}><Image
+						src={logo}
+						alt="Logo"
+						preview={false}
+						width={"40"}
+					></Image></Title>
 
 				</div>
 
@@ -134,11 +140,11 @@ const LoginPage: React.FC = () => {
 							onChange={(values) => setPassword(values.target.value)}
 						/>
 					</Form.Item>
-						{error && (
-							<div className={styles.errorAlert}>
-								{error}	
-							</div>
-						)}
+					{error && (
+						<div className={styles.errorAlert}>
+							{error}
+						</div>
+					)}
 					{/* 登入按鈕 */}
 					<Form.Item>
 						<Button
@@ -151,11 +157,11 @@ const LoginPage: React.FC = () => {
 							登入
 						</Button>
 					</Form.Item>
-					<div 
+					<div
 						style={{ display: 'flex', justifyContent: 'space-between' }}
 					>
 						<Button
-							style={{ marginRight: '8px' }}	
+							style={{ marginRight: '8px' }}
 							type="link"
 							onClick={() => navigate('/forgotpassword')}
 						>

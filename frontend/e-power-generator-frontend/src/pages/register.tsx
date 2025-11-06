@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Form, Input, Button, Typography } from 'antd';
+import { Card, Form, Input, Button, Typography, Image } from 'antd';
 // import { register } from '../services/authService'; // 匯入 service
 // import type { AxiosError } from 'axios';
 import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
+// import styles from './Login.module.css';
+import logo from '../assets/logo.png';
 
 // ... (LoginFormValues 介面, JSX...)
 
@@ -19,7 +21,7 @@ const { Title } = Typography;
 // }
 
 const RegisterPage: React.FC = () => {
-    const [loading, ] = useState(false);
+    const [loading,] = useState(false);
     const navigate = useNavigate();
 
     /**
@@ -59,7 +61,12 @@ const RegisterPage: React.FC = () => {
 
             <Card style={{ maxWidth: 400, minWidth: 360, boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
                 <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-                    <Title level={2}><img src="/src/assets/logo.png"></img></Title>
+                    <Title level={2}><Image
+                        src={logo}
+                        alt="Logo"
+                        preview={false}
+                        width={"40"}
+                    ></Image></Title>
 
                 </div>
 
@@ -97,7 +104,7 @@ const RegisterPage: React.FC = () => {
                             size="large"
                         />
                     </Form.Item>
-                    
+
                     {/* 帳號欄位 */}
                     <Form.Item
                         name="email"
@@ -152,11 +159,11 @@ const RegisterPage: React.FC = () => {
                             註冊
                         </Button>
                     </Form.Item>
-                    <div 
+                    <div
                         style={{ display: 'flex', justifyContent: 'space-between' }}
                     >
                         <Button
-                            style={{ marginRight: '8px' }}	
+                            style={{ marginRight: '8px' }}
                             type="link"
                             onClick={() => navigate('/forgotpassword')}
                         >
