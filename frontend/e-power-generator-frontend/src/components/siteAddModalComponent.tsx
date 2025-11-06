@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Card, Form, Input, Typography, Alert, message } from 'antd';
+import React, { useState } from 'react';
+import { Modal, Button, Card, Form, Input, Typography, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { Site } from '../types/site';
 import apiClient from '../services/apiClient';

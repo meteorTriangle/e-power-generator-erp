@@ -1,8 +1,8 @@
 // src/pages/ForgotPassword.tsx
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Card, Form, Input, Divider, Button, Typography, message, Spin, Alert } from 'antd';
+import { Link } from 'react-router-dom';
+import { Card, Form, Input, Divider, Button, Typography, Spin, Alert } from 'antd';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import apiClient from '../services/apiClient'; // 我們直接使用 apiClient
 

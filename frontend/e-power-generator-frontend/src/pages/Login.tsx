@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Card, Form, Input, Button, Typography, message } from 'antd';
+import { Card, Form, Input, Button, Typography } from 'antd';
 import { isAxiosError } from 'axios';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAuth } from '../context/authContext';
@@ -15,10 +15,10 @@ const { Title } = Typography;
 
 
 // 這是 antd Form 的 onFinish 函式會收到的型別
-interface LoginFormValues {
-	email: string;
-	password: string;
-}
+// interface LoginFormValues {
+// 	email: string;
+// 	password: string;
+// }
 
 const LoginPage: React.FC = () => {
 	// form status
@@ -42,7 +42,7 @@ const LoginPage: React.FC = () => {
 	 * 這裡就是「事件處理器」，不是 useEffect
 	 * 它會在使用者點擊 "登入" 按鈕且表單驗證通過後才被呼叫
 	 */
-	const handleLogin = async (values: LoginFormValues) => {
+	const handleLogin = async () => {
 		setIsLoading(true);
 		setError(null);
 		try {

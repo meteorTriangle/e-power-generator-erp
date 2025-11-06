@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Form, Input, Button, Typography, message } from 'antd';
+import { Card, Form, Input, Button, Typography } from 'antd';
 // import { register } from '../services/authService'; // 匯入 service
-import type { AxiosError } from 'axios';
+// import type { AxiosError } from 'axios';
 import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 
 // ... (LoginFormValues 介面, JSX...)
@@ -10,16 +10,16 @@ import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined } from '@ant-de
 const { Title } = Typography;
 
 // 這是 antd Form 的 onFinish 函式會收到的型別
-interface RegisterFormValues {
-    username: string;
-    email: string;
-    password: string;
-    password_confirma: string;
-    tel: string;
-}
+// interface RegisterFormValues {
+//     username: string;
+//     email: string;
+//     password: string;
+//     password_confirma: string;
+//     tel: string;
+// }
 
 const RegisterPage: React.FC = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading, _] = useState(false);
     const navigate = useNavigate();
 
     /**
