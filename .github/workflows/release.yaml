@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
-          path: ./frontend/e-power-generator-frontend/build # 確保此路徑正確
+          path: ./frontend/e-power-generator-frontend/dist # 確保此路徑正確
 
   # === 工作 2: 建置後端 (修改為跨平台編譯) ===
   build-backend:
