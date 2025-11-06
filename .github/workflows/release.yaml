@@ -76,13 +76,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
-          path: ./dist/static # 下載到 Go 程式準備提供的 'static' 資料夾
+          path: ./dist/static 
 
       - name: 下載後端產物
         uses: actions/download-artifact@v4
         with:
           name: backend-binary
-          path: ./dist # 下載到 'dist' 根目錄
+          path: ./dist
 
       - name: 準備打包
         run: |
@@ -102,4 +102,4 @@ jobs:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Release ${{ env.RELEASE_TAG }}
           files: |
-            ./release-arm64.tar.gz # 上傳 .tar.gz 檔案
+            ./release-arm64.tar.gz
