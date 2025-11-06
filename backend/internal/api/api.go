@@ -28,7 +28,17 @@ func StartApiGateway() {
 
 	protectedMux := http.NewServeMux()
 	authMiddleware := middleware.AuthMiddleware(AuthConfig.AccessSecret)
+	
+
+	
 	protectedMux.HandleFunc("/site/listall", getAllSiteApiHandler)
+	protectedMux.HandleFunc("/site/add", addSiteApiHandler)
+	protectedMux.HandleFunc("/site/edit", editSiteApiHandler)
+	protectedMux.HandleFunc("/site/delete", deleteSiteApiHandler)
+	
+
+
+
 	http.Handle("/api/v1/", http.StripPrefix("/api/v1", authMiddleware(protectedMux)))
 	// apiSite := http.NewServeMux()
 	// apiSite.HandleFunc("/listall", getAllSiteApiHandler)

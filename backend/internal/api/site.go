@@ -23,3 +23,62 @@ func getAllSiteApiHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to Encode JSON", http.StatusInternalServerError)
 	}
 }
+
+func addSiteApiHandler(w http.ResponseWriter, r *http.Request) {
+	var site database.Site
+	if err := json.NewDecoder(r.Body).Decode(&site);  err != nil {
+		http.Error(w, "Failed to Decode JSON", http.StatusBadRequest)
+		return
+	}
+	err := database.SiteAdd(site)
+	if err != nil {
+		http.Error(w, "Failed to Add Site", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte("Site Added"))
+
+}
+
+func editSiteApiHandler(w http.ResponseWriter, r *http.Request) {
+	var site database.Site
+	if err := json.NewDecoder(r.Body).Decode(&site);  err != nil {
+		http.Error(w, "Failed to Decode JSON", http.StatusBadRequest)
+		return
+	}
+	if site.ID == 0 {
+		// add new site
+		err := database.SiteAdd(site)
+		if err != nil {
+			http.Error(w, "Failed to Add Site", http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte("Site Added"))
+	} else {
+		// update site
+		err := database.SiteUpdateSelect(site)
+		if err != nil {
+			http.Error(w, "Failed to Update Site", http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Site Updated"))
+	}
+}
+
+func deleteSiteApiHandler(w http.ResponseWriter, r *http.Request) {
+	var site database.Site
+	if err := json.NewDecoder(r.Body).Decode(&site);  err != nil {
+		http.Error(w, "Failed to Decode JSON", http.StatusBadRequest)
+		return
+	}
+	err := database.SiteDel(site)
+	if err != nil {
+		http.Error(w, "Failed to Delete Site", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Site Deleted"))
+
+}

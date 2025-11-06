@@ -26,11 +26,16 @@ const delSiteSql string = `
 DELETE FROM site
 WHERE id = $1`
 
+type SiteContact struct {
+	Way 	string		`json:"Way"`
+	Value 	string		`json:"Value"`
+}
+
 type Site struct {
-	ID				int
-	Name			string
-	Address 		string
-	Contact_json	string	
+	ID				int			`json:"ID"`
+	Name			string		`json:"Name"`
+	Address 		string		`json:"Address"`
+	Contact_json	[]SiteContact	`json:"Contact"`
 }
 
 func SiteAdd(newSite Site) error{
@@ -77,7 +82,7 @@ func SiteUpdateSelect(target Site) (error) {
 		return fmt.Errorf("no rows were updated (ID %d might not exist)", target.ID)
 	}
 
-	fmt.Printf("Successfully updated status for generator %d\n", target.ID)
+	// fmt.Printf("Successfully updated status for generator %d\n", target.ID)
 	return nil
 }
 

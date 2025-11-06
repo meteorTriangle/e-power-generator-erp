@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, Form, Input, Button, Typography, message } from 'antd';
-// import { login } from '../services/authService'; // 匯入 service
-// import type { User } from '../services/authService'; // 匯入 service
 import { isAxiosError } from 'axios';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useAuth } from '../context/authContext';

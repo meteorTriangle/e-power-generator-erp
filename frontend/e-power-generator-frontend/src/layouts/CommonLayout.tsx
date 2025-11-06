@@ -203,7 +203,7 @@ const CommonLayout: FC = () => {
             <Header style={{ display: 'flex', alignItems: 'center' }}>
                 {/* Logo 或標題可以放在這裡 */}
                 <div className="logo">
-                    <img src='src/assets/logo.png' width={"40"}></img>
+                    <img src='/src/assets/logo.png' width={"40"}></img>
                 </div>
 
                 {/* 3. 核心：Menu 元件 */}

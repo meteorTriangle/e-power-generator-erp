@@ -7,5 +7,10 @@ export interface Site {
   ID: number;
   Name: string;
   Address: string;
-  Contact_json: string;
+  Contact: ContactInfo[];
+}
+
+export interface ContactInfo {
+    Way: string;
+    Value: string;
 }

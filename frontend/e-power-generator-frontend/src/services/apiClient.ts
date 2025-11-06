@@ -17,7 +17,7 @@ const apiClient: AxiosInstance = axios.create({
   timeout: 10000, 
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
 });
 
 // ... (攔截器等)

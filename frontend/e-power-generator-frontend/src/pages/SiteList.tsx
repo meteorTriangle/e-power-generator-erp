@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import SiteTable from '../features/sites/SiteTable';
-import { Typography, Button, Space, Alert } from 'antd';
+import { Typography, Button, Space, Alert, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { Site } from '../types/site'; // 匯入我們定義的型別
-import apiClient from '../services/apiClient'; 
+import apiClient from '../services/apiClient';
+// import AddSiteModal from '../components/siteAddModalComponent';
+import EditSiteModal from '../components/siteEditModalComponent';
+import { useAuth } from '../context/authContext';
 
 const { Title } = Typography;
 
@@ -18,43 +21,50 @@ const SiteList: React.FC = () => {
   const [sites, setSites] = useState<Site[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null); // state 可以是 string 或 null
+  const [edit, setEdit] = useState<boolean>(false);
+  const [record, setRecord] = useState<Site>({ ID: 0 } as Site);
+  const [type, setType] = useState<string>('add');
+  const {isLoading} = useAuth();
 
-  // 模擬資料獲取
+  const [isModalVisibleRecord] = useState<Site>({ ID: 0 } as Site);
+
+  const fetchSites = async () => {
+    try {
+      setLoading(true);
+      // 假設 axios 回傳的 data 型別是 Generator[]
+      const response = await apiClient.get<Site[]>('/site/listall');
+      setSites(response.data);
+      setError(null);
+    } catch (err: any) {
+      setError("讀取資料失敗：" + (err.message || '未知錯誤'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
   useEffect(() => {
-    const fetchSites = async () => {
-      try {
-        setLoading(true);
-        // 假設 axios 回傳的 data 型別是 Generator[]
-        const response = await apiClient.get<Site[]>('/site/listall');
-        setSites(response.data);
-        setError(null);
-      } catch (err: any) {
-        setError("讀取資料失敗：" + (err.message || '未知錯誤'));
-      } finally {
-        setLoading(false);
-      }
-    };
+    while (isLoading) {
+      // return;
+    }
     fetchSites();
-
-    // --- 目前，我們先用 setTimeout 模擬 1 秒的網路延遲 ---
-    // const timer = setTimeout(() => {
-    //   setSites(sites);
-    //   setLoading(false);
-    // }, 1000);
-
-    return ;
+    return;
   }, []);
 
-  // 處理新增
-  const handleAddNew = () => {
-    console.log('TODO: Open Add New Generator Modal');
-  };
+
 
   // 處理編輯 (從 Table 傳上來)
   const handleEdit = (record: Site) => {
-    console.log('Edit record:', record);
-    // TODO: 開啟編輯用的 Modal，並帶入 record 資料
+    setRecord(record);
+    setEdit(true);
+    setType('edit');
   };
+  const handleAdd = () => {
+    setRecord({ ID: 0 } as Site);
+    setEdit(true);
+    setType('add');
+  };
+
 
   // 處理查看 (從 Table 傳上來)
   const handleView = (record: Site) => {
@@ -69,22 +79,33 @@ const SiteList: React.FC = () => {
   return (
     <div style={{ padding: '24px' }}>
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        
+
+        <EditSiteModal
+          onRefresh={fetchSites}
+          record={record}
+          edit={edit}
+          setEdit={setEdit}
+          type={type}
+        />
+
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Title level={2} style={{ margin: 0 }}>
             站點管理
           </Title>
-          <Button 
-            type="primary" 
+          {/* <AddSiteModal
+            onRefresh={fetchSites}
+          /> */}
+          <Button
+            type="primary"
             icon={<PlusOutlined />}
-            onClick={handleAddNew}
+            onClick={handleAdd}
           >
             新增站點
           </Button>
         </div>
 
-        <SiteTable 
-          data={sites} 
+        <SiteTable
+          data={sites}
           loading={loading}
           onEdit={handleEdit}
           onView={handleView}
