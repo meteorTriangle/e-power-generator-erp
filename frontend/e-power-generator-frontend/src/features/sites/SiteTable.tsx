@@ -1,7 +1,7 @@
 // src/features/sites/SiteTable.tsx
 
 import React from 'react';
-import { Table, Tag, Space, Tooltip } from 'antd';
+import { Table, Space, Tooltip } from 'antd';
 import type { TableProps } from 'antd'; // 匯入 AntD 的型別
 import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import type { Site, ContactInfo } from '../../types/site'; // 匯入我們定義的型別

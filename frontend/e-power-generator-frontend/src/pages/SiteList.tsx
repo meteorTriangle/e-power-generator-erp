@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import SiteTable from '../features/sites/SiteTable';
-import { Typography, Button, Space, Alert, Modal } from 'antd';
+import { Typography, Button, Space, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { Site } from '../types/site'; // 匯入我們定義的型別
 import apiClient from '../services/apiClient';
@@ -26,7 +26,7 @@ const SiteList: React.FC = () => {
   const [type, setType] = useState<string>('add');
   const {isLoading} = useAuth();
 
-  const [isModalVisibleRecord] = useState<Site>({ ID: 0 } as Site);
+  // const [isModalVisibleRecord] = useState<Site>({ ID: 0 } as Site);
 
   const fetchSites = async () => {
     try {
