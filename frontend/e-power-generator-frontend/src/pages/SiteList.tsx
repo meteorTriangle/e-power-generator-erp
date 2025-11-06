@@ -8,7 +8,6 @@ import type { Site } from '../types/site'; // 匯入我們定義的型別
 import apiClient from '../services/apiClient';
 // import AddSiteModal from '../components/siteAddModalComponent';
 import EditSiteModal from '../components/siteEditModalComponent';
-import { useAuth } from '../context/authContext';
 
 const { Title } = Typography;
 
@@ -24,7 +23,6 @@ const SiteList: React.FC = () => {
   const [edit, setEdit] = useState<boolean>(false);
   const [record, setRecord] = useState<Site>({ ID: 0 } as Site);
   const [type, setType] = useState<string>('add');
-  const {isLoading} = useAuth();
 
   // const [isModalVisibleRecord] = useState<Site>({ ID: 0 } as Site);
 
@@ -35,7 +33,7 @@ const SiteList: React.FC = () => {
       const response = await apiClient.get<Site[]>('/site/listall');
       setSites(response.data);
       setError(null);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError("讀取資料失敗：" + (err.message || '未知錯誤'));
     } finally {
       setLoading(false);
@@ -44,9 +42,6 @@ const SiteList: React.FC = () => {
 
 
   useEffect(() => {
-    while (isLoading) {
-      // return;
-    }
     fetchSites();
     return;
   }, []);

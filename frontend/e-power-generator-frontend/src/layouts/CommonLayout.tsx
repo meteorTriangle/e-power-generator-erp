@@ -57,11 +57,10 @@ const CommonLayout: FC = () => {
         setCurrent(e.key);
     };
     const items_admin = () => {
-        var returnValue = ({
+        const returnValue = ({
                     label: <Link to="/admin">管理系統</Link>,
                     key: 'admin',
                 });
-        const { user, isLoading } = useAuth();
         if (isLoading){
             return {
                 key: 'authLoadingi',
@@ -81,7 +80,7 @@ const CommonLayout: FC = () => {
 
     
 
-    var items: MenuProps['items'] = [
+    const items: MenuProps['items'] = [
     {
         label: <Link to="/">首頁</Link>,
         key: 'home',

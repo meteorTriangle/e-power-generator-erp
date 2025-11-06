@@ -14,7 +14,7 @@ interface ForgotPasswordFormValues {
 
 // 模擬的 API 呼叫函式
 // (您可以將其移至 authService.ts 中)
-const requestPasswordReset = async (email: string): Promise<any> => {
+const requestPasswordReset = async (email: string): Promise<unknown> => {
   // 假設 API 端點是 /auth/forgot-password
   // 後端會處理寄送 email 的邏輯
   return apiClient.post('/auth/forgot-password', { email });

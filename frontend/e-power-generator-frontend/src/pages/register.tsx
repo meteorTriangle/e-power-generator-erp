@@ -19,7 +19,7 @@ const { Title } = Typography;
 // }
 
 const RegisterPage: React.FC = () => {
-    const [loading, _] = useState(false);
+    const [loading, ] = useState(false);
     const navigate = useNavigate();
 
     /**
@@ -40,7 +40,7 @@ const RegisterPage: React.FC = () => {
     //         setLoading(false);
     //     }
     // };
-    const onFinishFailed = (errorInfo: any) => {
+    const onFinishFailed = (errorInfo: unknown) => {
         console.log('表單驗證失敗:', errorInfo);
     };
 
