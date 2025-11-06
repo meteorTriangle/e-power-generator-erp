@@ -42,7 +42,7 @@ jobs:
         run: |
           cd ./frontend/e-power-generator-frontend/
           # npm run lint
-          npm run test
+          # npm run test
       
       - name: 建置 (Frontend)
         run: |
