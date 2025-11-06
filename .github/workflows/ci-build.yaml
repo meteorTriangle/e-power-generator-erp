@@ -22,7 +22,7 @@ jobs:
       (github.base_ref != 'main' && contains(github.event.pull_request.head.ref, 'frontend/')))) # 這是簡化的路徑判斷邏輯，更精確的判斷需要額外的 action
 
     defaults:
-      default-directory: ./frontend/e-power-generator-frontend/ # 設定此工作的預設目錄
+      working-directory: ./frontend/e-power-generator-frontend/ # 設定此工作的預設目錄
 
     steps:
       - name: 檢查程式碼
