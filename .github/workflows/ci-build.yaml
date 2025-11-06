@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: 檢查程式碼
-        uses: cd ./frontend/e-power-generator-frontend/ && actions/checkout@v4
+        uses: actions/checkout@v4
 
       - name: 設定 Node.js
-        uses: cd ./frontend/e-power-generator-frontend/ && actions/setup-node@v4
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
