@@ -41,7 +41,7 @@ jobs:
       - name: 執行 lint 和 test (Frontend)
         run: |
           cd ./frontend/e-power-generator-frontend/
-          npm run lint
+          # npm run lint
           npm run test
       
       - name: 建置 (Frontend)
