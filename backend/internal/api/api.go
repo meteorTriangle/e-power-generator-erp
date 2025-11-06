@@ -40,7 +40,7 @@ func StartApiGateway() {
 
 
 	http.Handle("/api/v1/", http.StripPrefix("/api/v1", authMiddleware(protectedMux)))
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	http.Handle("/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	// apiSite := http.NewServeMux()
 	// apiSite.HandleFunc("/listall", getAllSiteApiHandler)
 	// http.Handle("/api/v1/site/", http.StripPrefix("/api/v1/site", apiSite))
