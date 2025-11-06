@@ -11,6 +11,7 @@ import {
 import type { MenuProps } from 'antd'; // 匯入 MenuProps 型別
 import './CommonLayout.css'
 import { useAuth } from '../hooks/useAuth.ts';
+import logo from '../assets/logo.png';
 
 
 const { Header, Content,  } = Layout;
@@ -203,7 +204,7 @@ const CommonLayout: FC = () => {
                 {/* Logo 或標題可以放在這裡 */}
                 <div className="logo">
                     <Image 
-                        src='/src/assets/logo.png'
+                        src={logo}
                         width={"40"}
                     ></Image>
                 </div>
