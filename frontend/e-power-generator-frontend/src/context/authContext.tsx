@@ -7,7 +7,7 @@ import type {
   FC,
 } from 'react';
 import apiClient from '../services/apiClient';
-import { AuthContext } from './authContext';
+import { AuthContext } from './AuthContext';
 
 // --- 1. 定義型別 (Types) ---
 

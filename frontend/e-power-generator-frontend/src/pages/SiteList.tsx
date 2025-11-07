@@ -55,7 +55,7 @@ const SiteList: React.FC = () => {
     setType('edit');
   };
   const handleAdd = () => {
-    setRecord({ ID: 0 } as Site);
+    setRecord({ ID: 0, Contact: [{"Way":"","Value":""}] } as Site);
     setEdit(true);
     setType('add');
   };

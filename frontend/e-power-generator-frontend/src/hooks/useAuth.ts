@@ -2,7 +2,7 @@ import {
     useContext
  } from 'react';
 // (修改) 從 AuthContext 檔案中匯入 Context 和型別
-import { AuthContext } from '../context/authContext.ts'; 
+import { AuthContext } from '../context/AuthContext.ts'; 
 
 /**
  * useAuth Hook

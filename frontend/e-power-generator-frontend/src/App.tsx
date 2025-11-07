@@ -6,6 +6,7 @@ import { Routes, Route } from 'react-router-dom';
 import AdminLayout from './layouts/AdminLayout';
 import Dashboard from './pages/Dashboard';
 import InventoryList from './pages/InventoryList'; 
+import GeneratorModelList from './pages/admin/generatorModelManagerPages'; 
 import SiteList from './pages/SiteList'; 
 import LoginPage from './pages/Login';
 import CommonLayout from './layouts/CommonLayout';
@@ -31,7 +32,7 @@ const App: React.FC = () => {
             <Route index element={<Dashboard />} />
             <Route path="/admin/machine-manager" element={<InventoryList />} />
             <Route path="/admin/site-manager" element={<SiteList />} />
-            
+            <Route path="/admin/generator-product-manager" element={<GeneratorModelList />} />
           </Route>
         </Route>
       </Route>

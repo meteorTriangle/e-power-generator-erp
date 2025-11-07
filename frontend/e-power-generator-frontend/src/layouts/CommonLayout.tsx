@@ -3,7 +3,7 @@
 
 import { useState, type FC } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { Layout, Menu, Spin, Image } from 'antd';
+import { Layout, Menu, Spin } from 'antd';
 import {
     LoginOutlined,
     LogoutOutlined,
@@ -15,7 +15,6 @@ import logo from '../assets/logo.png';
 
 
 const { Header, Content,  } = Layout;
-
 
 const CommonLayout: FC = () => {
     const [current, setCurrent] = useState('home');
@@ -200,16 +199,16 @@ const CommonLayout: FC = () => {
 
     return (
         <Layout>
-            <Header style={{ display: 'flex', alignItems: 'center' }}>
+            <Header style={{ display: 'flex', alignItems: 'center', position: 'sticky', top: 0, zIndex: 1000 }}>
                 {/* Logo 或標題可以放在這裡 */}
                 <div className="logo">
-                    <Image 
+                    <img
                         src={logo}
                         alt="Logo"
-                        preview={false}
+                        // preview={false}
                         
                         width={"40"}
-                    ></Image>
+                    />
                 </div>
 
                 {/* 3. 核心：Menu 元件 */}

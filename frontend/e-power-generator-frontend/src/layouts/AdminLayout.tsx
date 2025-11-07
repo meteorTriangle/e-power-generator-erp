@@ -5,26 +5,26 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import type { MenuProps } from 'antd'; // 匯入 MenuProps 型別
 import { GiPowerGenerator } from "react-icons/gi";
-import { 
-  DashboardOutlined, 
+import {
+  DashboardOutlined,
   BookOutlined,
-  UserOutlined, 
-  OrderedListOutlined, 
+  UserOutlined,
+  OrderedListOutlined,
   FundOutlined,
   ShoppingOutlined,
   ToolOutlined
 } from '@ant-design/icons';
 import './AdminLayout.css'
-import {MdStore} from 'react-icons/md'
+import { MdStore } from 'react-icons/md'
 
 const { Content, Sider } = Layout;
 
 // 1. 為 menuItems 加上型別
 const menuItems: MenuProps['items'] = [
   {
-    key: '/', 
+    key: '/',
     icon: <DashboardOutlined />,
-    label: <Link to="">儀表板</Link>, 
+    label: <Link to="">儀表板</Link>,
   },
   {
     key: '/order-operation',
@@ -34,7 +34,13 @@ const menuItems: MenuProps['items'] = [
   {
     key: '/product-manager',
     icon: <ShoppingOutlined />,
-    label: <Link to="product-manager">商品管理</Link>,
+    label: "商品管理",
+    children: [
+      {
+        key: 'generator-product-manager',
+        label: <Link to="generator-product-manager">發電機機型管理</Link>,
+      },
+    ],
   },
   {
     key: '/machine-manager',
@@ -90,18 +96,18 @@ const menuItems: MenuProps['items'] = [
 
 // 2. 使用 React.FC
 const AdminLayout: React.FC = () => {
-  
-    
+
+
   const location = useLocation();
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible theme="light" >
-        <Menu 
-          theme="light" 
-          mode="inline" 
+        <Menu
+          theme="light"
+          mode="inline"
           selectedKeys={[location.pathname]}
-          items={menuItems} 
+          items={menuItems}
         />
       </Sider>
       <Layout>
