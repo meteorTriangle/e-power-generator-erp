@@ -1,7 +1,7 @@
 // src//components/generatorModelModalComponent.tsx
 
 import React, { useState } from 'react';
-import { Modal, Button, Form, Input, Alert, Upload,  type UploadProps } from 'antd';
+import { Modal, Button, Form, Input, Alert, Upload, type UploadProps } from 'antd';
 import { UploadOutlined, PlusOutlined } from '@ant-design/icons';
 import type { GeneratorModel, GeneratorModelSpec } from '../types/generatorModel';
 import apiClient from '../services/apiClient';
@@ -14,104 +14,125 @@ interface modelModalProps {
     type: string;
 }
 
-const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, onSuccess, initialData, type }) => {
-    const typeName = type === 'add' ? '新增' : '編輯';
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [form] = Form.useForm();
-    const [previewImageSrc, setPreviewImageSrc] = useState<string>("");
+interface UploadImgInputProps {
+    value?: string[] | string | undefined;
+    children?: React.ReactNode;
+    maxCount?: number;
+    action?: string;
+    onChange?: (value: string[] | string) => void;
+    isSingle: boolean;
+}
+const UploadImgInput: React.FC<UploadImgInputProps> = ({ value, children, maxCount, action, onChange, isSingle }) => {
     const [isPreviewVisible, setIsPreviewVisible] = useState<boolean>(false);
+    const [previewImageSrc, setPreviewImageSrc] = useState<string>("");
+    var result: string[]|string|undefined = isSingle ? '' : [];
+    const defaultFileList: UploadProps['defaultFileList'] = (
+        value ? (Array.isArray(value) ? value.map((path, index) => ({
+            uid: `${(index + 1) * -1}`,
+            name: `OtherImg_${index}.png`,
+            status: 'done',
+            url: path,
+            thumbUrl: path,
+            response: path,
+        })) : ([{
+            uid: `-1`,
+            name: `OtherImg_1.png`,
+            status: 'done',
+            url: value,
+            thumbUrl: value,
+            response: value,
+        }])) : []);
     const imageProps: UploadProps = {
         onPreview: async (file) => {
-            let src = (file.response[0]=='/'? '': '/') + file.response as string;
+            let src = (file.response[0] == '/' ? '' : '/') + file.response as string;
             console.log('file', file);
             setPreviewImageSrc(src);
             setIsPreviewVisible(true);
         },
-        action: '/api/v1/upload/tmp',
-    };
+        action: action || '/api/v1/upload/tmp',
+        defaultFileList: defaultFileList,
+        onChange: (info) => {
+            if (isSingle) {
+                result = info.file.response;
+                onChange?.(result ? result : '');
+                return;
+            } else {
+                result = Array.isArray(result) ? result : [];
+                info.fileList.forEach((file) => {
+                    result = Array.isArray(result) ? result : [];
+                    if (file.status === 'done') {
+                        result?.push(file.response);
+                    } else if (file.status === 'removed') {
+                        const index = result?.indexOf(file.response);
+                        if (index? (index > -1) : false) {
+                            result?.splice(index ? index : 0, 1);
+                        }
+                    }
+                });
+                onChange?.(result || []);
+            }
+        },
+        listType: 'picture-card',
+        accept: "image/*",
+        maxCount: maxCount,
+    }
 
-    const defaultSpecImgFileList: UploadProps['defaultFileList'] = initialData?.SpecImgPath? [{
-        uid: '-1',
-        name: 'SpecImg.png',
-        status: 'done',
-        url: initialData.SpecImgPath,
-        thumbUrl: initialData.SpecImgPath,
-        response: initialData.SpecImgPath,
-    }]: [];
+    return (
+        <>
+            <Upload
+                {...imageProps}
+            >{children}</Upload>
+            <Modal title="圖片預覽" open={isPreviewVisible} footer={null} onCancel={() => setIsPreviewVisible(false)}>
+                <img src={previewImageSrc} width="100%" />
+            </Modal>
+        </>
+    );
+};
 
-    const defaultProductImgFileList: UploadProps['defaultFileList'] = initialData?.MachineImgPath? [{
-        uid: '-1',
-        name: 'ProductImg.png',
-        status: 'done',
-        url: initialData.MachineImgPath,
-        thumbUrl: initialData.MachineImgPath,
-        response: initialData.MachineImgPath,
-    }]: [];
 
-    const defaultOtherImgFileList: UploadProps['defaultFileList'] = initialData?.OtherImgPath? initialData.OtherImgPath.map((path, index) => ({
-        uid: `${(index + 1) * -1}`,
-        name: `OtherImg_${index}.png`,
-        status: 'done',
-        url: path,
-        thumbUrl: path,
-        response: path,
-    })): [];
+
+const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, onSuccess, initialData, type }) => {
+    const typeName = type === 'add' ? '新增' : '編輯';
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    // const [form] = Form.useForm();
 
 
     const handleUploaderValidate = (rule: any, value: any) => {
-        const require = (type === 'add')? rule.required : false;
-        if (!value) {
-            if (require) {
-                // rule.message = '請上傳圖片';
-                return Promise.reject(new Error('請上傳圖片'));
+        if (rule.required) {
+            if (!value || value.length === 0) {
+                return Promise.reject('請上傳圖片');
             }
-            return Promise.resolve();
-        }
-        if (value.fileList?.length === 0) {
-            if (require) {
-                // rule.message = '請上傳圖片';
-                return Promise.reject(new Error('請上傳圖片'));
-            }
-        }
-        var hasUploading = false;
-        value.fileList?.forEach((file: any) => {
-            if (file.status !== 'done') {
-                hasUploading = true;
-                return;
-            }
-        });
-        if (hasUploading) {
-            return Promise.reject(new Error('圖片上傳中，請稍後'));
         }
         return Promise.resolve();
-    };
-    const handleSubmit = async () => {
+    }
+
+    const handleSubmit = async (values: GeneratorModel) => {
         try {
             setLoading(true);
-            const values = await form.validateFields();
-            var OtherImgPath: string[] = [];
-            try {
-                values.OtherImg.fileList.forEach((file: any) => {
-                    OtherImgPath.push(file.response);
-                });
-            } catch (err) {
-                OtherImgPath = [];
-            }
-            console.log('values', form.getFieldsValue());
-            var model: GeneratorModel = {
-                ID: 0,
-                Name: values.Name,
-                Power: Number(values.Power),
-                spec: values.spec as GeneratorModelSpec[],
-                SpecImgPath: values?.SpecImg?.fileList[0]?.response? values.SpecImg.fileList[0].response : '',
-                MachineImgPath: values?.ProductImg?.fileList[0]?.response? values.ProductImg.fileList[0].response : '',
-                OtherImgPath: OtherImgPath,
-            }
+            // const values = await form.validateFields();
+            // var OtherImgPath: string[] = [];
+            // try {
+            //     values.OtherImg.fileList.forEach((file: any) => {
+            //         OtherImgPath.push(file.response);
+            //     });
+            // } catch (err) {
+            //     OtherImgPath = [];
+            // }
+            console.log('values', values);
+            // var model: GeneratorModel = {
+            //     ID: 0,
+            //     Name: values.Name,
+            //     Power: Number(values.Power),
+            //     spec: values.spec as GeneratorModelSpec[],
+            //     SpecImgPath: values?.SpecImg?.fileList[0]?.response ? values.SpecImg.fileList[0].response : '',
+            //     MachineImgPath: values?.ProductImg?.fileList[0]?.response ? values.ProductImg.fileList[0].response : '',
+            //     OtherImgPath: OtherImgPath,
+            // }
             if (type === 'add') {
-                await apiClient.post('/generatorModel/upload', model);
+                await apiClient.post('/generatorModel/upload', values);
             } else {
-                await apiClient.post(`/generatorModel/update/`, model);
+                await apiClient.post(`/generatorModel/update/`, values);
             }
             setError(null);
             onSuccess();
@@ -123,25 +144,25 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
         }
     };
 
-    const aoc = (open: boolean)=>{
-        setError(null); 
-        console.log('afterOpenChange', form.getFieldsValue());
-        if(!open){
-            // if (type === 'add') {
-            //     form.resetFields();
-            // } else if (type === 'edit') {
-            //     form.setFieldsValue(initialData);
-            //     form.setFieldValue('SpecImg',{"fileList": defaultSpecImgFileList});
-            //     form.setFieldValue('ProductImg',{"fileList": defaultProductImgFileList});
-            //     form.setFieldValue('OtherImg',{"fileList": defaultOtherImgFileList});
-            //     form.setFieldsValue({}); // Trigger re-render
-            // }
-        } else {
-            form.resetFields();
-        }
+    // const aoc = (open: boolean) => {
+    //     setError(null);
+    //     console.log('afterOpenChange', form.getFieldsValue());
+    //     if (!open) {
+    //         // if (type === 'add') {
+    //         //     form.resetFields();
+    //         // } else if (type === 'edit') {
+    //         //     form.setFieldsValue(initialData);
+    //         //     form.setFieldValue('SpecImg',{"fileList": defaultSpecImgFileList});
+    //         //     form.setFieldValue('ProductImg',{"fileList": defaultProductImgFileList});
+    //         //     form.setFieldValue('OtherImg',{"fileList": defaultOtherImgFileList});
+    //         //     form.setFieldsValue({}); // Trigger re-render
+    //         // }
+    //     } else {
+    //         form.resetFields();
+    //     }
 
 
-    };
+    // };
 
     return (
         <Modal
@@ -150,15 +171,14 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
             onCancel={onClose}
             footer={null}
             destroyOnHidden={true}
-            afterOpenChange={aoc}
+            // afterOpenChange={aoc}
         >
             {error && <Alert message={error} type="error" showIcon style={{ marginBottom: 16 }} />}
             <Form
-                form={form}
                 layout="vertical"
                 onFinish={handleSubmit}
                 initialValues={initialData}
-                clearOnDestroy={true}
+                // clearOnDestroy={true}
                 autoComplete="off"
             >
                 <Form.Item name="ID" hidden>
@@ -178,9 +198,8 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
                 >
                     <Input />
                 </Form.Item>
-                <Form.Item name="SpecImg" label="規格圖片" rules={[{ required: true, validator: handleUploaderValidate }]}  >
-                    <Input hidden defaultValue={"20"}/>
-                    <Upload defaultFileList={defaultSpecImgFileList} {...imageProps} listType='picture-card' accept="image/*" maxCount={1} customRequest={()=>{return("21edd")}} >
+                <Form.Item name="SpecImgPath" label="規格圖片" rules={[{ required: true, validator: handleUploaderValidate }]} >
+                    <UploadImgInput maxCount={1} isSingle={true}>
                         <button
                             style={{ color: 'inherit', cursor: 'inherit', border: 0, background: 'none' }}
                             type="button"
@@ -188,10 +207,10 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
                             <UploadOutlined />
                             <div style={{ marginTop: 8 }}>Upload</div>
                         </button>
-                    </Upload>
+                    </UploadImgInput>
                 </Form.Item>
-                <Form.Item name="ProductImg" label="封面圖片" rules={[{ required: true, validator: handleUploaderValidate }]}>
-                    <Upload {...imageProps} defaultFileList={defaultProductImgFileList} listType='picture-card' accept="image/*" maxCount={1} >
+                <Form.Item name="MachineImgPath" label="封面圖片" rules={[{ required: true, validator: handleUploaderValidate }]}>
+                    <UploadImgInput maxCount={1} isSingle={true}>
                         <button
                             style={{ color: 'inherit', cursor: 'inherit', border: 0, background: 'none' }}
                             type="button"
@@ -199,10 +218,10 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
                             <UploadOutlined />
                             <div style={{ marginTop: 8 }}>Upload</div>
                         </button>
-                    </Upload>
+                    </UploadImgInput>
                 </Form.Item>
-                <Form.Item name="OtherImg" label="其他圖片" rules={[{ validator: handleUploaderValidate }]}  >
-                    <Upload {...imageProps} defaultFileList={defaultOtherImgFileList} listType='picture-card' accept="image/*" multiple={true} >
+                <Form.Item name="OtherImgPath" label="其他圖片" rules={[{ validator: handleUploaderValidate }]}  >
+                    <UploadImgInput maxCount={undefined} isSingle={false}>
                         <button
                             style={{ color: 'inherit', cursor: 'inherit', border: 0, background: 'none' }}
                             type="button"
@@ -210,7 +229,7 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
                             <UploadOutlined />
                             <div style={{ marginTop: 8 }}>Upload</div>
                         </button>
-                    </Upload>
+                    </UploadImgInput>
                 </Form.Item>
                 <Form.List name="spec">
                     {(fields, { add, remove }) => (
@@ -263,9 +282,6 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
                     </Button>
                 </Form.Item>
             </Form>
-            <Modal title="圖片預覽" open={isPreviewVisible} footer={null} onCancel={() => setIsPreviewVisible(false)}>
-                <img src={previewImageSrc} width="100%" />
-            </Modal>
         </Modal>
     );
 
