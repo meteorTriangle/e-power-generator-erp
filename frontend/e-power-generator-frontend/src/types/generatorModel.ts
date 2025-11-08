@@ -13,4 +13,5 @@ export interface GeneratorModel {
     spec: GeneratorModelSpec[];
     SpecImgPath: string;
     MachineImgPath: string;
+    OtherImgPath: string[];
 }

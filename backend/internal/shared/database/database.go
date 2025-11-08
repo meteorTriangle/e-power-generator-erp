@@ -14,8 +14,13 @@ import (
 
 var pool *pgxpool.Pool
 
+type TableInitFunc func() error
 
-var TableInit []func() error
+var tableInit []TableInitFunc
+
+func AddInitTableFunc(f TableInitFunc) {
+	tableInit = append(tableInit, f)
+}
 
 
 func init() {
@@ -62,7 +67,7 @@ func Connect() {
 		fmt.Println("Unable to connect to database:", err)
 	}
 	fmt.Println("Connected to database")
-	for _, initFunc := range TableInit {
+	for _, initFunc := range tableInit {
 		err := initFunc()
 		if err != nil {
 			log.Fatalf("Table initialization failed: %v\n", err)

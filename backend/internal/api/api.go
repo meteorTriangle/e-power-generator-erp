@@ -4,11 +4,13 @@ import (
 	// "fmt"
 	"log"
 	"net/http"
-	// "os"
-	"time"
-	"new-e-power-generator-sys/inventory/internal/auth"
-	"new-e-power-generator-sys/inventory/internal/shared/middleware"
 
+	// "os"
+	"new-e-power-generator-sys/inventory/internal/auth"
+	"new-e-power-generator-sys/inventory/internal/img"
+	"new-e-power-generator-sys/inventory/internal/model"
+	"new-e-power-generator-sys/inventory/internal/shared/middleware"
+	"time"
 )
 
 
@@ -25,7 +27,7 @@ func StartApiGateway() {
 	authMux := http.NewServeMux()
 	AuthHandler.RegisterRoutes(authMux)
 	http.Handle("/api/v1/auth/", http.StripPrefix("/api/v1/auth", authMux))
-
+	http.HandleFunc("/api/v1/upload/tmp", img.UploadImgHandler)
 	protectedMux := http.NewServeMux()
 	authMiddleware := middleware.AuthMiddleware(AuthConfig.AccessSecret)
 	
@@ -36,15 +38,13 @@ func StartApiGateway() {
 	protectedMux.HandleFunc("/site/edit", editSiteApiHandler)
 	protectedMux.HandleFunc("/site/delete", deleteSiteApiHandler)
 	
-
+	protectedMux.HandleFunc("/generatorModel/upload", model.AddGeneratorModelHandler)
+	protectedMux.HandleFunc("/generatorModel/listall", model.ListallGeneratorModelHandler)
 
 
 	http.Handle("/api/v1/", http.StripPrefix("/api/v1", authMiddleware(protectedMux)))
+	http.Handle("/img/", http.StripPrefix("/img" , http.FileServer(http.Dir("./img/"))))
 	http.Handle("/", http.FileServer(http.Dir("./static/")))
-	// apiSite := http.NewServeMux()
-	// apiSite.HandleFunc("/listall", getAllSiteApiHandler)
-	// http.Handle("/api/v1/site/", http.StripPrefix("/api/v1/site", apiSite))
-	// http.HandleFunc("/api/v1/site/listall", getAllSiteApiHandler)
 	err := http.ListenAndServe(":9098", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)

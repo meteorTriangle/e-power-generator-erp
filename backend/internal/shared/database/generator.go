@@ -1,75 +1,36 @@
 package database
 
-import (
-	"context"
-	"fmt"
+// import (
+// 	"context"
+// 	"fmt"
 
-	"github.com/jackc/pgx/v5"
-	"github.com/google/uuid"
-)
-
-
-type Generator struct {
-	ID		uuid.UUID
-	Name	string
-	Site  	int
-	Model	string
-}
-
-const addGeneratorSql string = `
-INSERT INTO generator (id, name, model, site)
-VALUES ($1, $2, $3, $4)`
-
-const listAllGeneratorSql string = `
-SELECT id, name, model, site
-FROM generator
-ORDER BY model`
-
-const updateGeneratorSql string = `
-UPDATE generator
-SET name = $1, model = $2, site = $3
-WHERE id = $4`
+// 	"github.com/jackc/pgx/v5"
+// 	"github.com/google/uuid"
+// )
 
 
+// type GeneratorSpec struct {
 
+// }
 
-func GeneratorAdd(newGenerator Generator) error{
-	_, err := pool.Exec(
-		context.Background(), addGeneratorSql,
-		uuid.New(),
-		newGenerator.Name,
-		newGenerator.Model,
-		newGenerator.Site,
-	)
-	if err != nil {
-		return fmt.Errorf("add new generator failed: %w", err)
-	}
-	return nil
-	
-}
+// type Generator struct {
+// 	ID		int
+// 	Name	string
+// 	Power 	int
+// 	Spec	map[string]interface{}
+// 	Model	string
+// }
 
-func GeneratorListAll() ([]Generator, error) {
-	rows, err := pool.Query(context.Background(), listAllGeneratorSql)
-	if err != nil {
-		return nil, fmt.Errorf("pool.Query failed: %w", err)
-	}
-	generator, err := pgx.CollectRows(rows, pgx.RowToStructByPos[Generator])
-	if err != nil {
-		return nil, fmt.Errorf("CollectRows failed: %w", err)
-	}
-	return generator, nil
-}
+// const createGeneratorTable string = `
+// CREATE TABLE IF NOT EXISTS public.generator_model
+// (
+//     "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+//     "Name" text COLLATE pg_catalog."default" NOT NULL,
+//     "Power" integer NOT NULL,
+//     "Spec" json,
+//     "SpecImg" path,
+//     "MachineImg" path,
+//     "otherImage" path[],
+//     CONSTRAINT generator_model_pkey PRIMARY KEY ("ID")
+// )`
 
-func GeneratorUpdateSelect(target Generator) error {
-	_, err := pool.Exec(
-		context.Background(), updateGeneratorSql,
-		target.Name,
-		target.Model,
-		target.Site,
-		target.ID,
-	)
-	if err != nil {
-		return fmt.Errorf("update generator failed: %w", err)
-	}
-	return nil
-} 

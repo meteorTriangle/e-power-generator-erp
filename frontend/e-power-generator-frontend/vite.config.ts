@@ -51,6 +51,10 @@ export default defineConfig({
         // (這會將 /api/v1/generators 轉發為 http://localhost:8080/generators)
         
         // rewrite: (path) => path.replace(/^\/api\/v1/, ''), // 目前請保持註解
+      },
+      "/img" : {
+        target: 'http://localhost:9098', 
+        changeOrigin: true,
       }
       
       // 如果您有其他 API 路徑 (例如 /auth)，但它們共用 /api 前綴，

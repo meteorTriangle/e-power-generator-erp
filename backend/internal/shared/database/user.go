@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS public.user_info
     email_check boolean NOT NULL DEFAULT false,
     CONSTRAINT email UNIQUE (email),
     CONSTRAINT phone_number UNIQUE (phone_number)
-)`	
+)`
 
 const addUserBySuperAdminSql string = `
 INSERT INTO user_info (username, password_hash, role, sales_site, phone_number, email, email_check, permis_group)
@@ -47,7 +47,7 @@ FROM user_info
 WHERE email = $1`
 
 func init() {
-	TableInit = append(TableInit, UserTableInit)
+	AddInitTableFunc(UserTableInit)
 }
 
 

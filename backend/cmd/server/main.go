@@ -7,6 +7,7 @@ import (
 	"new-e-power-generator-sys/inventory/internal/shared/database"
 	// "new-e-power-generator-sys/inventory/internal/shared/email"
 	"new-e-power-generator-sys/inventory/internal/api"
+	// "new-e-power-generator-sys/inventory/internal/shared/permission"
 )
 
 func main(){

@@ -6,7 +6,6 @@ import { Typography, Button, Space, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { Site } from '../types/site'; // 匯入我們定義的型別
 import apiClient from '../services/apiClient';
-// import AddSiteModal from '../components/siteAddModalComponent';
 import EditSiteModal from '../components/siteEditModalComponent';
 
 const { Title } = Typography;

@@ -29,6 +29,7 @@ const getColumns = (
             fixed: 'left',
             width: 200,
             render: (imageURL: string) => {
+                imageURL = (imageURL[0] === '/' ? "" : "/" )+ imageURL;
                 return <img src={imageURL} alt="Generator Model" style={{ maxWidth: '170px', maxHeight: '170px' }} />;
             }
         },
@@ -82,6 +83,7 @@ const getColumns = (
                             dataSource={specs}
                             showHeader={false}
                             pagination={false}
+                            scroll={{y: 168}}
                             style={{ minWidth: "100%" }}
                         />
                     </div>
