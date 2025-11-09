@@ -49,8 +49,9 @@ func AddGeneratorModelHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// handle OtherImg
+	oetherImg := genModel.OtherImg
 	genModel.OtherImg = []string{}
-	for _, otherImg := range genModel.OtherImg {
+	for _, otherImg := range oetherImg {
 		otherImg, err = img.CopyTmpImg(otherImg, "generator-other")
 		if err != nil {
 			http.Error(w, "Failed to read OtherImg", http.StatusBadRequest)

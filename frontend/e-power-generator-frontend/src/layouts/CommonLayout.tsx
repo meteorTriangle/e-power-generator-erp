@@ -1,9 +1,10 @@
 // src/layout/CommonLayout.tsx
 
 
-import { useState, type FC } from 'react';
+import { type FC } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { Layout, Menu, Spin } from 'antd';
+import { useLocation } from 'react-router-dom';
 import {
     LoginOutlined,
     LogoutOutlined,
@@ -17,7 +18,9 @@ import logo from '../assets/logo.png';
 const { Header, Content,  } = Layout;
 
 const CommonLayout: FC = () => {
-    const [current, setCurrent] = useState('home');
+    // get current route path
+    const location = useLocation();
+    location.pathname
     const { logout, user, isLoading } = useAuth();
     const navigate = useNavigate();
 
@@ -25,14 +28,14 @@ const CommonLayout: FC = () => {
     const authItem = () => {
         if (isLoading) {
             return ({
-                key: 'authLoadinga',
+                key: 'authLoading',
                 label: <Spin size="small" />, 
                 disabled: true,
             })
         }
         if (user) {
             return ({
-                key: '/logout',
+                key: 'logout',
                 icon: <LogoutOutlined />,
                 label: `登出`, // 顯示使用者名稱
                 onClick: () => {
@@ -45,7 +48,7 @@ const CommonLayout: FC = () => {
                 key: '/login',
                 icon: <LoginOutlined />,
                 label: '登入',
-                onClick: () => navigate('/login'),
+                // onClick: () => navigate('/login'),
             })  
         }
 
@@ -54,16 +57,16 @@ const CommonLayout: FC = () => {
     // 2. 處理點擊事件，MenuProps['onClick'] 是 TS 類型
     const onClick: MenuProps['onClick'] = (e) => {
         console.log('click ', e);
-        setCurrent(e.key);
+        navigate(e.key);
     };
     const items_admin = () => {
         const returnValue = ({
                     label: <Link to="/admin">管理系統</Link>,
-                    key: 'admin',
+                    key: '/admin',
                 });
         if (isLoading){
             return {
-                key: 'authLoadingi',
+                key: 'authLoading',
                 label: <Spin size="small" />, 
                 disabled: true,
             };
@@ -216,7 +219,7 @@ const CommonLayout: FC = () => {
                     theme="light" // 主題
                     mode="horizontal" // 設置為水平模式
                     onClick={onClick}
-                    selectedKeys={[current]}
+                    selectedKeys={[location.pathname]}
                     items={items}
                     style={{ flex: 1, minWidth: 0 }} // 讓菜單填滿剩餘空間
                 />
