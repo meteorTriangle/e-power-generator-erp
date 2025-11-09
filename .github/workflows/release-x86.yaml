@@ -1,0 +1,105 @@
+name: Create Release for AMD64 Deployment
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # 僅在推送 'v' 開頭的標籤時觸發 (例如 v1.0.1)
+
+jobs:
+  # === 工作 1: 建置前端 (使用您現有的邏輯) ===
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 檢查程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: 安裝依賴 (Frontend)
+        run: |
+          cd ./frontend/e-power-generator-frontend/
+          npm install
+          
+      - name: 建置 (Frontend)
+        # (註) 在 Release 時，您可以選擇性跳過 lint/test 以加快速度
+        run: |
+          cd ./frontend/e-power-generator-frontend/
+          npm run build
+
+      - name: 上傳建置產物
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: ./frontend/e-power-generator-frontend/dist # 確保此路徑正確
+
+  # === 工作 2: 建置後端 (修改為跨平台編譯) ===
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 檢查程式碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 1.25 # 使用您指定的版本
+
+      - name: (修改) 跨平台編譯 for Raspberry Pi (amd64)
+        env:
+          GOOS: linux
+          GOARCH: AMD64 # 假設您的 Pi 是 64-bit (Pi 3B+, 4, 5)
+        run: |
+          cd ./backend
+          # (修改) CGO_ENABLED=0 是跨平台編譯的好習慣
+          CGO_ENABLED=0 go build -v -o ./server-amd64 ./cmd/server
+        
+      - name: 上傳建置產物
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-binary
+          path: ./backend/server-amd64 # 上傳編譯好的 amd 執行檔
+  # === 工作 3: 打包並建立 Release ===
+  package-and-release:
+    runs-on: ubuntu-latest
+    needs: [build-frontend, build-backend] # 等待前兩個工作完成
+    permissions:
+      contents: write # 需要此權限才能建立 Release
+
+    steps:
+      - name: 獲取 Git 標籤
+        run: echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: 下載前端產物
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: ./dist/static 
+
+      - name: 下載後端產物
+        uses: actions/download-artifact@v4
+        with:
+          name: backend-binary
+          path: ./dist
+
+      - name: 準備打包
+        run: |
+          mv ./dist/server-amd64 ./dist/server
+          echo "打包檔案結構："
+          ls -lR ./dist
+
+      - name: Gzip 壓縮 .tar 檔 (改為 .tar.gz)
+        run: |
+          cd ./dist
+          tar -czf ../release-amd64.tar.gz server static
+          cd ..
+
+      - name: 建立 GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
+          files: |
+            ./release-amd64.tar.gz
