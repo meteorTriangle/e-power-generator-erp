@@ -32,7 +32,7 @@ const CommonLayout: FC = () => {
         }
         if (user) {
             return ({
-                key: 'logout',
+                key: '/logout',
                 icon: <LogoutOutlined />,
                 label: `登出`, // 顯示使用者名稱
                 onClick: () => {
@@ -42,7 +42,7 @@ const CommonLayout: FC = () => {
             })
         } else {
             return ({
-                key: 'login',
+                key: '/login',
                 icon: <LoginOutlined />,
                 label: '登入',
                 onClick: () => navigate('/login'),

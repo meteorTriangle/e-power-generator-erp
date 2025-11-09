@@ -120,8 +120,8 @@ const UploadImgInput: React.FC<UploadImgInputProps> = (props) => {
 
     const imageProps: UploadProps = {
         onPreview: async (file) => {
-            let src = (file.response[0] == '/' ? '' : '/') + file.response as string;
-            console.log('file', file);
+            let src = ((file.response || file.url)[0] == '/' ? '' : '/') + (file.response || file.url) as string;
+            console.log('file', src);
             setPreviewImageSrc(src);
             setIsPreviewVisible(true);
         },
