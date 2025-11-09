@@ -50,7 +50,7 @@ jobs:
       - name: (修改) 跨平台編譯 for Raspberry Pi (amd64)
         env:
           GOOS: linux
-          GOARCH: AMD64 # 假設您的 Pi 是 64-bit (Pi 3B+, 4, 5)
+          GOARCH: amd64 # 假設您的 Pi 是 64-bit (Pi 3B+, 4, 5)
         run: |
           cd ./backend
           # (修改) CGO_ENABLED=0 是跨平台編譯的好習慣
