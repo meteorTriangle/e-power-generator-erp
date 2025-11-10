@@ -36,7 +36,7 @@ const GeneratorModelList: React.FC = () => {
   const [editModalVisible, setEditModalVisible] = useState<boolean>(false);
   const [ModalType, setModalType] = useState<string>('add');
   const [selectedGenerator, setSelectedGenerator] = useState<GeneratorModel>(null as any);
-  // 模擬資料獲取
+
   useEffect(() => {
     // 未來 API 呼叫的範例 (假設使用 axios)
     const fetchGenerators = async () => {
@@ -68,9 +68,10 @@ const GeneratorModelList: React.FC = () => {
     // }, 1000);
 
     // return () => clearTimeout(timer);
-  }, []);
+  }, [editModalVisible]);
 
-  const refreshList = () => {
+  const handlerefreshList = () => {
+    // fetchGenerators();
   };
 
   // 處理新增
@@ -127,7 +128,7 @@ const GeneratorModelList: React.FC = () => {
       <EditGeneratorModelModal
         visible={editModalVisible} // TODO: 根據狀態控制顯示
         onClose={() => {setEditModalVisible(false)}}
-        onSuccess={() => {refreshList()}}
+        onSuccess={() => {handlerefreshList}}
         initialData={selectedGenerator}
         type={ModalType}
       />

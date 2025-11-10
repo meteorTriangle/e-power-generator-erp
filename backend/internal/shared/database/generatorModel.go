@@ -50,8 +50,8 @@ WHERE id = $1`
 
 const updateGeneratorModelSql string = `
 UPDATE generator_model
-SET name = $1, power = $2, spec = $3, specimg = $4, machineimg = $5, otherimage = $6
-WHERE id = $7`
+SET "Name" = $1, "Power" = $2, "Spec" = $3, "SpecImg" = $4, "MachineImg" = $5, "otherImage" = $6
+WHERE "ID" = $7`
 
 const deleteGeneratorModelSql string = `
 DELETE FROM generator_model

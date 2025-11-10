@@ -161,7 +161,7 @@ const EditGeneratorModelModal: React.FC<modelModalProps> = ({ visible, onClose, 
             if (type === 'add') {
                 await apiClient.post('/generatorModel/upload', values);
             } else {
-                await apiClient.post(`/generatorModel/update/`, values);
+                await apiClient.post(`/generatorModel/update`, values);
             }
             setError(null);
             onSuccess();

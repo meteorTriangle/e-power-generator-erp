@@ -42,6 +42,7 @@ func StartApiGateway() {
 	
 	protectedMux.HandleFunc("/generatorModel/upload", model.AddGeneratorModelHandler)
 	protectedMux.HandleFunc("/generatorModel/listall", model.ListallGeneratorModelHandler)
+	protectedMux.HandleFunc("/generatorModel/update", model.EditGeneratorModelHandler)
 
 
 	http.Handle("/api/v1/", http.StripPrefix("/api/v1", authMiddleware(protectedMux)))
