@@ -46,6 +46,25 @@ SELECT username, role, sales_site, phone_number, email_check, permis_group
 FROM user_info
 WHERE email = $1`
 
+const updateUserByEmail string = `
+UPDATE user_info
+SET username = $1, role = $2, sales_site = $3, phone_number = $4, email = $5, email_check = $6, permis_group = $7
+WHERE email = $8`
+
+const deleteUserByEmail string = `
+DELETE FROM user_info
+WHERE email = $1`
+
+const CheckedEmailByEmail string = `
+UPDATE user_info
+SET email_check = true
+WHERE email = $1`
+
+const registerUserSql string = `
+INSERT INTO user_info (username, password_hash, role, sales_site, phone_number, email, email_check, permis_group)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`
+
+
 func init() {
 	AddInitTableFunc(UserTableInit)
 }
@@ -138,4 +157,38 @@ func UserGetByEmail(email string) (User, error) {
 		return User{}, fmt.Errorf("query user failed: %w", err)
 	}
 	return user, nil
+}
+
+func UserUpdateByEmail(target User) error {
+	_, err := pool.Exec(
+		context.Background(), updateUserByEmail,
+		target.Username,
+		target.Role,
+		target.Sales_site,
+		target.Phone_number,
+		target.Email,
+		target.Email_check,
+		target.Group,
+		target.Email,
+	)
+	if err != nil {
+		return fmt.Errorf("update user failed: %w", err)
+	}
+	return nil
+}
+
+func UserDeleteByEmail(email string) error {
+	_, err := pool.Exec(context.Background(), deleteUserByEmail, email)
+	if err != nil {
+		return fmt.Errorf("delete user failed: %w", err)
+	}
+	return nil
+}
+
+func UserCheckedEmailByEmail(email string) error {
+	_, err := pool.Exec(context.Background(), CheckedEmailByEmail, email)
+	if err != nil {
+		return fmt.Errorf("check email failed: %w", err)
+	}
+	return nil
 }

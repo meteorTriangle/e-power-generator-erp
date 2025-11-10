@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 	"time"
+	"new-e-power-generator-sys/inventory/internal/shared/database"
+	"fmt"
 )
 
 
@@ -29,6 +31,13 @@ type loginRequest struct {
 	Username string `json:"email"`
 	Password string `json:"password"`
 }
+type registerRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Email    string `json:"email"`
+	Tel      string `json:"tel"`
+}
+
 
 type jsonResponse map[string]interface{}
 
@@ -118,4 +127,53 @@ func (h *AuthHandler) handleLogout(w http.ResponseWriter, r *http.Request) {
 	})
 
 	writeJSON(w, http.StatusOK, jsonResponse{"message": "logged out"})
+}
+
+func HandleRegister(w http.ResponseWriter, r *http.Request) {
+	var req registerRequest	
+	// 解碼 JSON 請求
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+
+	fmt.Println(r.Header.Get("Origin"))
+	
+	baseUrl := r.Header.Get("Origin") + "/api/v1/verify-email"
+	fmt.Println(r.URL)
+	// 呼叫 Service
+	err := RegisterUser(database.User{
+		Username:  req.Username,
+		Role:      "customer",
+		Group:     []string{},
+		Sales_site: 0,
+		Phone_number: req.Tel,
+		Email:      req.Email,
+		Email_check: false,
+	}, req.Password, baseUrl)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	writeJSON(w, http.StatusOK, jsonResponse{"message": "registration successful"})
+
+}
+
+func HandleEmailVerify(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+
+	verified, err := EmailVerifyCheck(email)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if verified {
+
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		
+		return
+	}
+	http.Error(w, "email not verified", http.StatusBadRequest)
 }

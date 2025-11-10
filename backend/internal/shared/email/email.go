@@ -2,10 +2,32 @@ package email
 
 import (
 	"crypto/tls"
+	"fmt"
 	"log"
 
+	"os"
+
+	"github.com/joho/godotenv"
 	"gopkg.in/gomail.v2"
 )
+
+var SMTPConfigVar SMTPConfig
+
+// init SMTPConfig 
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	SMTPConfigVar = SMTPConfig{
+		Host:     os.Getenv("SMTP_HOST"),
+		Username: os.Getenv("SMTP_USERNAME"),
+		Password: os.Getenv("SMTP_PASSWORD"),
+		From:     os.Getenv("SMTP_FROM"),
+	}
+	fmt.Sscan(os.Getenv("SMTP_PORT"), &SMTPConfigVar.Port)
+}
+
 
 type EmailSender interface {
 	SendEmail(to string, subject string, body string) error

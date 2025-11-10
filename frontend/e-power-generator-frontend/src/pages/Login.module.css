@@ -103,6 +103,16 @@ form {
   font-size: 0.9rem;
 }
 
+.successAlert {
+  background-color: #e6f7e6; /* 淺綠色 */
+  color: #27ae60; /* 深綠色 */
+  border: 1px solid #2ecc71;
+  padding: 0.75rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
 .footerLinks a {
   color: #007bff;
   text-decoration: none;

@@ -44,7 +44,8 @@ func StartApiGateway() {
 	protectedMux.HandleFunc("/generatorModel/listall", model.ListallGeneratorModelHandler)
 	protectedMux.HandleFunc("/generatorModel/update", model.EditGeneratorModelHandler)
 
-
+	http.HandleFunc("/api/v1/register", auth.HandleRegister)
+	http.HandleFunc("/api/v1/verify-email", auth.HandleEmailVerify)
 	http.Handle("/api/v1/", http.StripPrefix("/api/v1", authMiddleware(protectedMux)))
 	http.Handle("/img/", http.StripPrefix("/img" , http.FileServer(http.Dir("./img/"))))
 	http.HandleFunc("/", spaHandler)

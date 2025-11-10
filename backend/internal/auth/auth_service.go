@@ -136,3 +136,4 @@ func (s *AuthService) validateToken(tokenString string, secret string) (*CustomC
 	}
 	return nil, errors.New("invalid token")
 }
+
