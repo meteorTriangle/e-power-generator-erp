@@ -14,7 +14,7 @@ func main(){
 	fmt.Println("Starting server...")
 	database.Connect()
 	fmt.Println("Database connected.")
-	
+	// permission.Nop()
 	defer database.Close()
 
 	// site, err := database.SiteListAll()

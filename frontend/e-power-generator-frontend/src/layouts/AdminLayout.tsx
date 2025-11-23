@@ -1,10 +1,13 @@
 // src/layouts/AdminLayout.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Drawer, Button } from 'antd';
 import type { MenuProps } from 'antd'; // 匯入 MenuProps 型別
 import { GiPowerGenerator } from "react-icons/gi";
+import { DeviceSelect } from '../router/mobilePCRoute';
+
 import {
   DashboardOutlined,
   BookOutlined,
@@ -12,7 +15,8 @@ import {
   OrderedListOutlined,
   FundOutlined,
   ShoppingOutlined,
-  ToolOutlined
+  ToolOutlined,
+  MenuOutlined,
 } from '@ant-design/icons';
 import './AdminLayout.css'
 import { MdStore } from 'react-icons/md'
@@ -94,29 +98,66 @@ const menuItems: MenuProps['items'] = [
   },
 ];
 
+
 // 2. 使用 React.FC
 const AdminLayout: React.FC = () => {
+  const [visibleDrawer, setVisibleDrawer] = useState(false);
 
-
+  const showDrawer = () => setVisibleDrawer(true);
+  const closeDrawer = () => setVisibleDrawer(false);
   const location = useLocation();
 
+  const adminMenu = <Menu
+    theme="light"
+    mode="inline"
+    selectedKeys={[location.pathname]}
+    items={menuItems}
+    onClick={closeDrawer}
+  />
+
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible theme="light" >
-        <Menu
-          theme="light"
-          mode="inline"
-          selectedKeys={[location.pathname]}
-          items={menuItems}
-        />
-      </Sider>
-      <Layout>
-        <Content style={{ margin: '16px' }}>
-          <Outlet />
-        </Content>
+    <>
+      <Layout style={{ minHeight: '100vh' }}>
+
+        <DeviceSelect deviceType={['mobile', 'tablet']}>
+          <Drawer
+            open={visibleDrawer}
+            onClose={closeDrawer}
+            placement="left"
+          >
+            {adminMenu}
+          </Drawer>
+        </DeviceSelect>
+
+        <DeviceSelect deviceType={['laptop', 'desktop']}>
+          <Sider
+            collapsible={false}
+            theme="light"
+          >
+            {adminMenu}
+          </Sider>
+        </DeviceSelect>
+
+        <Layout>
+          <Content style={{ margin: '16px' }}>
+            <Outlet />
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+      <DeviceSelect deviceType={['mobile', 'tablet']}>
+        {visibleDrawer ? null : ReactDOM.createPortal(
+          <Button
+            style={{ position: 'fixed', bottom: 16, left: 16, zIndex: 9999 }}
+            onClick={showDrawer}
+          >
+            <MenuOutlined />
+          </Button>, document.body)}
+      </DeviceSelect>
+    </>
   );
 };
+
+
 
 export default AdminLayout;

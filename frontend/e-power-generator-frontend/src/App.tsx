@@ -5,9 +5,9 @@ import { Routes, Route } from 'react-router-dom';
 
 import AdminLayout from './layouts/AdminLayout';
 import Dashboard from './pages/Dashboard';
-import InventoryList from './pages/InventoryList'; 
-import GeneratorModelList from './pages/admin/generatorModelManagerPages'; 
-import SiteList from './pages/SiteList'; 
+import InventoryList from './pages/InventoryList';
+import GeneratorModelList from './pages/admin/generatorModelManagerPages';
+import SiteList from './pages/SiteList';
 import LoginPage from './pages/Login';
 import CommonLayout from './layouts/CommonLayout';
 import RegisterPage from './pages/register';
