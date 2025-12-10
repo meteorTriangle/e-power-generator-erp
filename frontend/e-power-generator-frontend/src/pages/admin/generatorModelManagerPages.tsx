@@ -7,9 +7,10 @@ import type {
     GeneratorModel,
 } from "../../types/generatorModel"
 import GeneratorModelTable from '../../features/generators/GeneratorModelTable';
+import GeneratorModelCardList from '../../features/generators/GeneratorModelCardList';
 import EditGeneratorModelModal, {  } from '../../components/generatorModelModalComponent';
 import apiClient from '../../services/apiClient';
-
+import { DeviceSelect } from '../../router/mobilePCRoute';
 
 const { Title } = Typography;
 
@@ -116,14 +117,29 @@ const GeneratorModelList: React.FC = () => {
             新增品項
           </Button>
         </div>
-
-        <GeneratorModelTable 
-          data={generatorModels} 
-          loading={loading}
-          onEdit={handleEdit}
-          onView={handleView}
-        />
-
+        <DeviceSelect deviceType={['desktop']}>
+          <GeneratorModelTable 
+            data={generatorModels} 
+            loading={loading}
+            onEdit={handleEdit}
+            onView={handleView}
+          />
+        </DeviceSelect>
+        <DeviceSelect deviceType={['mobile', 'tablet', 'laptop']}>
+          <div style={{ 
+            // display: 'flex-inline', 
+            // justifyContent: 'center', 
+            // alignItems: 'center', 
+            // flexDirection: 'column',
+            // width: '100%', 
+            }}>
+          <GeneratorModelCardList
+            data={generatorModels}
+            onEdit={handleEdit}
+            onView={handleView}
+          ></GeneratorModelCardList>
+          </div>
+        </DeviceSelect>
       </Space>
       <EditGeneratorModelModal
         visible={editModalVisible} // TODO: 根據狀態控制顯示
