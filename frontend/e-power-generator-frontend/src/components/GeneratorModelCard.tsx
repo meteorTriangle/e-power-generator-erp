@@ -20,7 +20,14 @@ const GeneratorModelCard: React.FC<GeneratorModelCardProps> = ({ modelName, powe
     <Card
       hoverable
       style={{ width: '100vw', height: 500 }}
-      cover={<Image alt={modelName} src={imageUrl} width={'100%'} height={300} style={{ objectFit: 'contain' }} />}
+      cover={<Image 
+        alt={modelName} 
+        src={imageUrl} 
+        width={'100%'} 
+        height={300} 
+        style={{ objectFit: 'contain' }} 
+        preview={false}
+        />}
       actions={[
         onEdit && <a onClick={onEdit}>編輯</a>,
         onView && <a onClick={onView}>查看</a>,

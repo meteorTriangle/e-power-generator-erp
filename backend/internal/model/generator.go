@@ -165,3 +165,22 @@ func EditGeneratorModelHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func ListallGeneratorModelForPublicHandler(w http.ResponseWriter, r *http.Request) {
+	// This handler handles list all generator model
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	generatorModels, err := database.GeneratorModelListAll()
+	if err != nil {
+		http.Error(w, "Failed to list all generator model"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	err = json.NewEncoder(w).Encode(generatorModels)
+	if err != nil {
+		http.Error(w, "Failed to encode JSON"+err.Error(), http.StatusInternalServerError)
+		return
+	}
+}

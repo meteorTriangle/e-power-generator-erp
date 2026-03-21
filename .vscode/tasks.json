@@ -1,0 +1,12 @@
+{
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "dev",
+            "path": "frontend/e-power-generator-frontend",
+            "problemMatcher": [],
+            "label": "npm: dev - frontend/e-power-generator-frontend",
+            "detail": "vite"
+        }
+    ]
+}

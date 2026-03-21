@@ -33,6 +33,9 @@ func StartApiGateway() {
 	protectedMux := http.NewServeMux()
 	authMiddleware := middleware.AuthMiddleware(AuthConfig.AccessSecret)
 	
+	publicMux := http.NewServeMux()
+	publicMux.HandleFunc("/model/listall", model.ListallGeneratorModelForPublicHandler)
+	http.Handle("/api/v1/public/", http.StripPrefix("/api/v1/public", publicMux))
 
 	
 	protectedMux.HandleFunc("/site/listall", getAllSiteApiHandler)

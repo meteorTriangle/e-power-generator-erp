@@ -15,6 +15,7 @@ import ProtectRoute from './router/ProtectRoute';
 import Home from './pages/home';
 import About from './pages/about';
 import ForgotPasswordPage from './pages/ForgotPassword';
+import InquiryPage from './pages/user/inquiry';
 
 
 // 2. 使用 React.FC
@@ -27,6 +28,7 @@ const App: React.FC = () => {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
         <Route path="/about" element={<About />} />
+        <Route path="/quote" element={<InquiryPage />} />
         <Route element={<ProtectRoute />}>
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />

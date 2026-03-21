@@ -173,7 +173,7 @@ const CommonLayout: FC = () => {
         ],
     },
     {
-        label: '我要詢價',
+        label: "我要詢價",
         key: 'quote',
     },
     {

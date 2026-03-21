@@ -3,3 +3,7 @@ backend/server
 *permission.config
 backend/img
 backend/static
+backendv2/static
+logs/
+*.log
+backendv2/server
