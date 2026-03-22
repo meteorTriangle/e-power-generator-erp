@@ -84,6 +84,11 @@ jobs:
           name: backend-binary-v2
           path: ./dist
 
+      - name: 移動 SQL migrations 
+        run: |
+          mkdir -p ./dist/migrations
+          mv ./backendv2/migrations/* ./dist/migrations/
+
       - name: 準備打包
         run: |
           mv ./dist/server-arm64 ./dist/server
