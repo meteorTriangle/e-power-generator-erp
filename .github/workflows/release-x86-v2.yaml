@@ -87,7 +87,7 @@ jobs:
       - name: 移動 SQL migrations 
         run: |
           mkdir -p ./dist/migrations
-          mv ./backendv2/migrations/* ./dist/migrations/
+          mv ./backendv2/migrations/ ./dist/migrations/
 
       - name: 準備打包
         run: |
