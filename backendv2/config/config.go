@@ -11,12 +11,12 @@ func init() {
 	err := LoadConfig()
 	if err != nil {
 		fmt.Printf("無法載入環境變數: %v\n", err)
-		os.Exit(1)
+		// os.Exit(1)
 	}
 }
 
 func LoadConfig() error {
-	// 載入 .env 檔案
+	// 載入 .env 檔案 如果沒有找到會回傳錯誤，但我們不強制要求 .env 存在（可以直接從環境變數讀取）
 	err := godotenv.Load()
 	if err != nil {
 		return fmt.Errorf("無法載入 .env 檔案: %w", err)
